@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -euo pipefail
+exec /var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh --cli "$@"

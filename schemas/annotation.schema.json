@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reposystem.dev/schemas/invariant-path/annotation.schema.json",
+  "title": "Invariant Path Annotation",
+  "type": "object",
+  "required": [
+    "id",
+    "artifact_uri",
+    "span",
+    "source_text",
+    "target_text",
+    "path_description",
+    "invariant_type",
+    "losses",
+    "classification",
+    "visibility",
+    "status",
+    "created_by",
+    "updated_at",
+    "notes"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "artifact_uri": { "type": "string", "minLength": 1 },
+    "span": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "source_text": { "type": "string" },
+    "target_text": { "type": "string" },
+    "path_description": { "type": "string" },
+    "invariant_type": {
+      "type": "string",
+      "enum": [
+        "causal_relationship",
+        "statistical_relationship",
+        "logical_implication",
+        "mechanism",
+        "risk_probability",
+        "normative_bridge",
+        "resource_budget",
+        "provenance"
+      ]
+    },
+    "preserved": {
+      "type": ["boolean", "null"]
+    },
+    "losses": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "break_condition": {
+      "type": ["string", "null"]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "valid_path",
+        "overextended",
+        "conflation",
+        "incomplete",
+        "abstain"
+      ]
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["private", "shared_team"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["open", "accepted", "dismissed", "clarified"]
+    },
+    "created_by": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

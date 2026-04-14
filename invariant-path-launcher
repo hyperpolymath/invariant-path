@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: PMPL-1.0-or-later
+#
+# Invariant Path Launcher (Quandle) - Standardized launcher following UX standards
+# D-SIP-FV-MA Compliant: Dependable, Secure, Interoperable, Performant,
+# Functional, Versatile, Metaiconic, Accessible
+#
+# Part of the nextgen-databases/quandledb repository.
+# Wraps the core Invariant Path launcher for project-specific use.
+
+set -euo pipefail
+
+# ============================================================================
+# CONFIGURATION
+# ============================================================================
+APP_NAME="InvariantPath-Quandle"
+VERSION="1.0.0"
+REPO_DIR="/var/mnt/eclipse/repos/nextgen-databases/quandledb"
+CORE_LAUNCHER="/var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh"
+PID_FILE="/tmp/${APP_NAME,,}-server.pid"
+LOG_FILE="/tmp/${APP_NAME,,}-server.log"
+MODE="${1:---auto}"
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'  # No Color
+
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
+log() {
+  echo "[$APP_NAME] $1"
+}
+
+err() {
+  echo "[$APP_NAME] ERROR: $1" >&2
+}
+
+warn() {
+  echo "[$APP_NAME] WARNING: $1" >&2
+}
+
+is_running() {
+  [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null
+}
+
+# ============================================================================
+# RUNTIME FUNCTIONS
+# ============================================================================
+
+start_app() {
+  if is_running; then
+    log "Application is already running (PID: $(cat "$PID_FILE"))"
+    return 0
+  fi
+  
+  log "Starting Invariant Path scan for Quandle..."
+  
+  # For Invariant Path, "starting" often means running a scan in background or 
+  # keeping a service alive. Since it's a CLI tool, we'll perform a scan of 
+  # the quandledb directory.
+  
+  cd "$REPO_DIR"
+  # Run the core launcher's auto mode (which scans the repo) and background it
+  nohup "$CORE_LAUNCHER" --scan "$REPO_DIR" "generic" >"$LOG_FILE" 2>&1 &
+  echo $! > "$PID_FILE"
+  
+  log "Scan started in background (PID: $(cat "$PID_FILE"))"
+  log "Log file: $LOG_FILE"
+}
+
+stop_app() {
+  if ! is_running; then
+    log "No running instance found"
+    return 0
+  fi
+  
+  log "Stopping background processes..."
+  kill "$(cat "$PID_FILE")" 2>/dev/null || true
+  rm -f "$PID_FILE"
+  log "Stopped"
+}
+
+show_status() {
+  if is_running; then
+    log "Running (PID: $(cat "$PID_FILE"))"
+  else
+    log "Not running"
+  fi
+  
+  log "Last scan results (if any):"
+  "$CORE_LAUNCHER" --status
+}
+
+# ============================================================================
+# HELP AND VERSION
+# ============================================================================
+
+show_help() {
+  echo -e "${BLUE}${APP_NAME} ${VERSION}${NC}"
+  echo -e "${GREEN}Usage:${NC} $(basename "$0") [OPTION]"
+  echo ""
+  echo "Options:"
+  echo "  --start       Start a background scan of Quandle"
+  echo "  --stop        Stop any running background scan"
+  echo "  --status      Show status and last scan results"
+  echo "  --scan        Perform a foreground scan of Quandle"
+  echo "  --auto        Alias for --start (default)"
+  echo "  --help        Show this help message"
+}
+
+# ============================================================================
+# MAIN SWITCH
+# ============================================================================
+
+case "$MODE" in
+  --start|--auto)
+    start_app
+    ;;
+  
+  --stop)
+    stop_app
+    ;;
+  
+  --status)
+    show_status
+    ;;
+
+  --scan)
+    "$CORE_LAUNCHER" --scan "$REPO_DIR" "generic"
+    ;;
+  
+  --help|-h|--?)
+    show_help
+    ;;
+  
+  *)
+    # Fallback to auto
+    start_app
+    ;;
+esac

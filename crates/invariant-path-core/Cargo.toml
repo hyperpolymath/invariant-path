@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+[package]
+name = "invariant-path-core"
+version = "0.1.0"
+edition = "2021"
+license = "PMPL-1.0-or-later"
+description = "Core extractor/classifier/storage components for Invariant Path"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+regex = { workspace = true }
+once_cell = { workspace = true }
+time = { workspace = true }
+thiserror = { workspace = true }

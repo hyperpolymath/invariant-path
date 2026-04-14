@@ -1,0 +1,36 @@
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath)
+;
+; 0-AI-MANIFEST.a2ml — Universal AI entry point for Invariant Path
+; Media-Type: application/a2ml
+
+(manifest
+  (identity
+    (name "invariant-path")
+    (full-name "Invariant Path")
+    (version "0.1.0")
+    (license "PMPL-1.0-or-later")
+    (author "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>")
+    (status "starred"))
+
+  (purpose
+    "Monorepo for Invariant Path heuristic extraction and classification.
+     Provides a shared CLI for multiple estate components (echidna, panll, hypatia).")
+
+  (canonical-locations
+    (ai-manifest     "0-AI-MANIFEST.a2ml"           "THIS FILE")
+    (launcher        "invariant-path-launcher"      "Standardized launcher"))
+
+  (structure
+    "invariant-path/
+     ├── crates/                    # Rust crates (CLI, core logic)
+     ├── profiles/                  # Scan profiles for different repos
+     ├── schemas/                   # JSON schemas for annotations
+     └── scripts/                   # Management and installation scripts")
+
+  (format-meta
+    (version "2.1.0")
+    (media-type "application/a2ml")
+    (created "2026-04-14")
+    (last-updated "2026-04-14")
+    (maintained-by "Jonathan D.A. Jewell / hyperpolymath")))

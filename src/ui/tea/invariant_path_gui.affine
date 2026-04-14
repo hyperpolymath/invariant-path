@@ -1,0 +1,139 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Invariant Path GUI — AffineScript TEA Interface
+// Underpinned by Cadre Router (Affine Stack Implementation)
+//
+// Purpose: Provide a formally verified, resource-safe interface for
+// tracing claim transitions and invariant preservation across repository artifacts.
+
+// ── Types ─────────────────────────────────────────────────────────────────
+
+struct Claim {
+  id: String,
+  source_file: String,
+  line_number: Int,
+  content: String
+}
+
+struct TraceStep {
+  step_id: Int,
+  description: String,
+  affected_claims: List(Claim)
+}
+
+enum ViewState {
+  Dashboard,
+  TraceViewer,
+  IntegrityReport
+}
+
+// ── Model ───────────────────────────────────────────────────────────────────
+
+struct Model {
+  view_state: ViewState,
+  active_trace: List(TraceStep),
+  current_step_index: Int,
+  is_scanning: Bool,
+  history_depth: Int
+}
+
+// ── Msg ──────────────────────────────────────────────────────────────────────
+
+enum Msg {
+  Navigate(ViewState),
+  StartScan,
+  ScanComplete(List(TraceStep)),
+  SelectStep(Int),
+  PopState
+}
+
+// ── TEA Logic ────────────────────────────────────────────────────────────────
+
+fn invariant_path_init() -> Model {
+  {
+    view_state: ViewState::Dashboard,
+    active_trace: [],
+    current_step_index: -1,
+    is_scanning: false,
+    history_depth: 0
+  }
+}
+
+fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
+  match model {
+    { view_state: v, active_trace: t, current_step_index: i, is_scanning: s, history_depth: h } => {
+      match msg {
+        Navigate(new_state) => {
+          {
+            view_state: new_state,
+            active_trace: t,
+            current_step_index: i,
+            is_scanning: false,
+            history_depth: h + 1
+          }
+        }
+
+        StartScan => {
+          {
+            view_state: v,
+            active_trace: t,
+            current_step_index: i,
+            is_scanning: true,
+            history_depth: h
+          }
+        }
+
+        ScanComplete(new_trace) => {
+          {
+            view_state: ViewState::TraceViewer,
+            active_trace: new_trace,
+            current_step_index: 0,
+            is_scanning: false,
+            history_depth: h
+          }
+        }
+
+        SelectStep(new_idx) => {
+          {
+            view_state: v,
+            active_trace: t,
+            current_step_index: new_idx,
+            is_scanning: s,
+            history_depth: h
+          }
+        }
+
+        PopState => {
+          if h > 0 {
+            {
+              view_state: ViewState::Dashboard,
+              active_trace: t,
+              current_step_index: -1,
+              is_scanning: false,
+              history_depth: h - 1
+            }
+          } else {
+            {
+              view_state: v,
+              active_trace: t,
+              current_step_index: i,
+              is_scanning: s,
+              history_depth: 0
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fn invariant_path_view(model: Model) -> String {
+  match model.view_state {
+    Dashboard       => "INVARIANT PATH: Claim Tracing Dashboard",
+    TraceViewer     => "TRACE VIEWER: Step " + (if model.current_step_index >= 0 { "Active" } else { "None" }),
+    IntegrityReport => "INTEGRITY REPORT: Factual Claim Grounding"
+  }
+}
+
+fn invariant_path_subs(model: Model) -> String {
+  "None"
+}

@@ -1,0 +1,24 @@
+[Desktop Entry]
+Type=Application
+Name=Invariant Path
+GenericName=Claim-Path Debugger
+Comment=Trace claim transitions and invariant preservation across repository artifacts
+Exec=/var/mnt/eclipse/repos/.desktop-tools/run-with-pause.sh /var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh --auto
+Terminal=true
+Icon=utilities-terminal
+Categories=Development;Utility;
+Keywords=invariant;claim;annotation;debugging;documentation;
+StartupNotify=true
+Actions=status;open-output;help;
+
+[Desktop Action status]
+Name=Overlay Status
+Exec=/var/mnt/eclipse/repos/.desktop-tools/run-with-pause.sh /var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh --status
+
+[Desktop Action open-output]
+Name=Open Last Scan Output
+Exec=/var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh --open-output
+
+[Desktop Action help]
+Name=Launcher Help
+Exec=/var/mnt/eclipse/repos/.desktop-tools/run-with-pause.sh /var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh --help

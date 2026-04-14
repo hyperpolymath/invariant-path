@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+[package]
+name = "invariant-path-cli"
+version = "0.1.0"
+edition = "2021"
+license = "PMPL-1.0-or-later"
+description = "CLI for Invariant Path semantic overlay MVP"
+
+[dependencies]
+clap = { workspace = true }
+serde_json = { workspace = true }
+invariant-path-core = { path = "../invariant-path-core" }
