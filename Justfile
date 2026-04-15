@@ -1,3 +1,5 @@
+import? "contractile.just"
+
 # Invariant Path - Justfile
 # Build automation and development tasks
 
@@ -55,6 +57,18 @@ open-output:
 # Show status
 status:
     ./invariant-path-launcher --status
+
+# Start server
+start:
+    ./invariant-path-launcher --start
+
+# Stop server
+stop:
+    ./invariant-path-launcher --stop
+
+# Web UI (experimental)
+web:
+    ./invariant-path-launcher --web
 
 # Cross-launch NQC
 nqc:
