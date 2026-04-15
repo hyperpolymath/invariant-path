@@ -13,3 +13,11 @@ regex = { workspace = true }
 once_cell = { workspace = true }
 time = { workspace = true }
 thiserror = { workspace = true }
+
+[dev-dependencies]
+proptest = { workspace = true }
+criterion = { workspace = true }
+
+[[bench]]
+name = "pipeline_bench"
+harness = false

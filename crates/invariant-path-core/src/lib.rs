@@ -13,6 +13,14 @@ mod tests {
     use crate::annotations::AnnotationStore;
     use crate::model::{Classification, InvariantType, Status, Visibility};
     use crate::pipeline::scan_artifact;
+    use proptest::prelude::*;
+
+    proptest! {
+        #[test]
+        fn proptest_scan_artifact_no_panic(s in "\\PC*") {
+            let _ = scan_artifact("repo://proptest.md", &s, "proptester", Visibility::Private);
+        }
+    }
 
     fn first(text: &str) -> crate::model::Annotation {
         scan_artifact("repo://test.md", text, "tester", Visibility::Private)

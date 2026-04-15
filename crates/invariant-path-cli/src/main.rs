@@ -48,9 +48,15 @@ enum Command {
 
 #[derive(Debug, clap::Args)]
 struct DocClaimsArgs {
-    /// Corpus root to scan recursively.
-    #[arg(long)]
-    root: PathBuf,
+    /// Roots to scan recursively for documentation files.
+    /// If omitted, defaults to the first grounding root.
+    #[arg(long = "scan-root")]
+    scan_roots: Vec<PathBuf>,
+
+    /// Grounding roots used to resolve file and path claims.
+    /// At least one root is required.
+    #[arg(long = "root", required = true)]
+    roots: Vec<PathBuf>,
 
     /// Optional output JSONL path. If omitted, prints to stdout.
     #[arg(long)]
@@ -364,14 +370,31 @@ fn main() -> Result<(), String> {
 }
 
 fn run_doc_claims(args: DocClaimsArgs) -> Result<(), String> {
-    if !args.root.exists() {
-        return Err(format!("root not found: {}", args.root.display()));
+    for root in &args.roots {
+        if !root.exists() {
+            return Err(format!("grounding root not found: {}", root.display()));
+        }
     }
+    let scan_roots = if args.scan_roots.is_empty() {
+        vec![args.roots[0].clone()]
+    } else {
+        args.scan_roots.clone()
+    };
+    for s_root in &scan_roots {
+        if !s_root.exists() {
+            return Err(format!("scan root not found: {}", s_root.display()));
+        }
+    }
+
     let cfg = GrounderConfig {
         allow_exec: args.allow_exec,
         ..GrounderConfig::default()
     };
-    let records = scan_corpus(&args.root, &cfg);
+
+    let mut records = Vec::new();
+    for s_root in &scan_roots {
+        records.extend(scan_corpus(s_root, &args.roots, &cfg));
+    }
 
     if let Some(out_path) = &args.out {
         if let Some(parent) = out_path.parent() {

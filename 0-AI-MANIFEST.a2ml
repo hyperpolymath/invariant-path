@@ -8,10 +8,13 @@
   (identity
     (name "invariant-path")
     (full-name "Invariant Path")
-    (version "0.1.0")
+    (version "0.2.0")
     (license "PMPL-1.0-or-later")
     (author "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>")
     (status "starred"))
+
+  (milestones
+    (phase-a "COMPLETE" "2026-04-15" "Multi-root grounding, proptest, and benchmarks"))
 
   (purpose
     "Monorepo for Invariant Path heuristic extraction and classification.

@@ -218,26 +218,32 @@ fn make_claim_id(source_uri: &str, span: &Span, raw: &str) -> String {
     format!("ipdc-{:016x}", h.finish())
 }
 
-/// Resolve one claim against the file system rooted at `root`.
-pub fn ground_claim(claim: &DocClaim, root: &Path, cfg: &GrounderConfig) -> ClaimResult {
+/// Resolve one claim against the file system rooted at any of the `roots`.
+///
+/// Multi-root grounding: the predicate (e.g. FileExists) is checked against
+/// each root in order. The first match is used. This allows documentation
+/// in `standards/` to reference files in `hypatia/` if both are roots.
+pub fn ground_claim(claim: &DocClaim, roots: &[PathBuf], cfg: &GrounderConfig) -> ClaimResult {
     match &claim.predicate {
         Predicate::FileExists { path } => {
-            let candidate = resolve_under_root(root, path);
-            if candidate.exists() {
+            let candidate = resolve_across_roots(roots, path);
+            if candidate.map(|c| c.exists()).unwrap_or(false) {
                 ClaimResult::Grounded
             } else {
                 ClaimResult::Ungrounded {
-                    reason: format!("path not found under corpus root: {}", path),
+                    reason: format!("path not found under any corpus root: {}", path),
                 }
             }
         }
         Predicate::PathContainsRegex { path, pattern } => {
-            let candidate = resolve_under_root(root, path);
-            if !candidate.exists() {
-                return ClaimResult::Ungrounded {
-                    reason: format!("path not found: {}", path),
-                };
-            }
+            let candidate = match resolve_across_roots(roots, path) {
+                Some(c) if c.exists() => c,
+                _ => {
+                    return ClaimResult::Ungrounded {
+                        reason: format!("path not found: {}", path),
+                    };
+                }
+            };
             let body = match read_capped(&candidate, cfg.max_read_bytes) {
                 Ok(s) => s,
                 Err(e) => {
@@ -257,12 +263,14 @@ pub fn ground_claim(claim: &DocClaim, root: &Path, cfg: &GrounderConfig) -> Clai
             }
         }
         Predicate::A2mlKeyPresent { file, key } => {
-            let candidate = resolve_under_root(root, file);
-            if !candidate.exists() {
-                return ClaimResult::Ungrounded {
-                    reason: format!("a2ml file not found: {}", file),
-                };
-            }
+            let candidate = match resolve_across_roots(roots, file) {
+                Some(c) if c.exists() => c,
+                _ => {
+                    return ClaimResult::Ungrounded {
+                        reason: format!("a2ml file not found: {}", file),
+                    };
+                }
+            };
             let body = match read_capped(&candidate, cfg.max_read_bytes) {
                 Ok(s) => s,
                 Err(e) => {
@@ -304,12 +312,19 @@ pub fn ground_claim(claim: &DocClaim, root: &Path, cfg: &GrounderConfig) -> Clai
     }
 }
 
-fn resolve_under_root(root: &Path, path: &str) -> PathBuf {
+fn resolve_across_roots(roots: &[PathBuf], path: &str) -> Option<PathBuf> {
     if Path::new(path).is_absolute() {
-        PathBuf::from(path)
-    } else {
-        root.join(path)
+        return Some(PathBuf::from(path));
     }
+    for root in roots {
+        let candidate = root.join(path);
+        if candidate.exists() {
+            return Some(candidate);
+        }
+    }
+    // Return the first root as a fallback even if it doesn't exist,
+    // to preserve current diagnostic behavior in ground_claim.
+    roots.first().map(|r| r.join(path))
 }
 
 fn read_capped(path: &Path, cap: usize) -> std::io::Result<String> {
@@ -320,13 +335,26 @@ fn read_capped(path: &Path, cap: usize) -> std::io::Result<String> {
 
 /// Walk a directory and return claim+result pairs for every recognised
 /// file. v1 supports `.md` and `.adoc`; the matrix can grow.
-pub fn scan_corpus(root: &Path, cfg: &GrounderConfig) -> Vec<DocClaimRecord> {
+///
+/// `scan_root` is the directory being scanned for claims.
+/// `ground_roots` are the roots used to resolve those claims.
+pub fn scan_corpus(
+    scan_root: &Path,
+    ground_roots: &[PathBuf],
+    cfg: &GrounderConfig,
+) -> Vec<DocClaimRecord> {
     let mut out: Vec<DocClaimRecord> = Vec::new();
-    walk(root, root, &mut out, cfg);
+    walk(scan_root, scan_root, ground_roots, &mut out, cfg);
     out
 }
 
-fn walk(root: &Path, dir: &Path, out: &mut Vec<DocClaimRecord>, cfg: &GrounderConfig) {
+fn walk(
+    scan_root: &Path,
+    dir: &Path,
+    ground_roots: &[PathBuf],
+    out: &mut Vec<DocClaimRecord>,
+    cfg: &GrounderConfig,
+) {
     let entries = match fs::read_dir(dir) {
         Ok(e) => e,
         Err(_) => return,
@@ -339,7 +367,7 @@ fn walk(root: &Path, dir: &Path, out: &mut Vec<DocClaimRecord>, cfg: &GrounderCo
             }
         }
         if path.is_dir() {
-            walk(root, &path, out, cfg);
+            walk(scan_root, &path, ground_roots, out, cfg);
             continue;
         }
         let ext = match path.extension().and_then(|e| e.to_str()) {
@@ -353,11 +381,11 @@ fn walk(root: &Path, dir: &Path, out: &mut Vec<DocClaimRecord>, cfg: &GrounderCo
             Ok(t) => t,
             Err(_) => continue,
         };
-        let rel = path.strip_prefix(root).unwrap_or(&path).to_string_lossy();
+        let rel = path.strip_prefix(scan_root).unwrap_or(&path).to_string_lossy();
         let source_uri = format!("repo://{}", rel);
         let claims = extract_claims(&text, &source_uri);
         for claim in claims {
-            let result = ground_claim(&claim, root, cfg);
+            let result = ground_claim(&claim, ground_roots, cfg);
             out.push(DocClaimRecord {
                 claim,
                 result,
@@ -385,6 +413,14 @@ pub fn partition_failures(records: &[DocClaimRecord]) -> (Vec<&DocClaimRecord>, 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use proptest::prelude::*;
+
+    proptest! {
+        #[test]
+        fn proptest_extract_claims_no_panic(s in "\\PC*") {
+            let _ = extract_claims(&s, "repo://proptest.md");
+        }
+    }
 
     #[test]
     fn extracts_backtick_path() {
@@ -434,7 +470,8 @@ mod tests {
             },
         };
         let cfg = GrounderConfig::default();
-        assert_eq!(ground_claim(&claim, &temp, &cfg), ClaimResult::Grounded);
+        let roots = vec![temp.clone()];
+        assert_eq!(ground_claim(&claim, &roots, &cfg), ClaimResult::Grounded);
         std::fs::remove_dir_all(&temp).unwrap();
     }
 
@@ -453,11 +490,38 @@ mod tests {
             },
         };
         let cfg = GrounderConfig::default();
-        match ground_claim(&claim, &temp, &cfg) {
+        let roots = vec![temp.clone()];
+        match ground_claim(&claim, &roots, &cfg) {
             ClaimResult::Ungrounded { .. } => {}
             other => panic!("expected Ungrounded, got {:?}", other),
         }
         std::fs::remove_dir_all(&temp).unwrap();
+    }
+
+    #[test]
+    fn ground_multi_root_resolution() {
+        let temp1 = std::env::temp_dir().join(format!("ipdc-multi1-{}", std::process::id()));
+        let temp2 = std::env::temp_dir().join(format!("ipdc-multi2-{}", std::process::id()));
+        std::fs::create_dir_all(&temp1).unwrap();
+        std::fs::create_dir_all(&temp2).unwrap();
+        std::fs::write(temp2.join("Y.adoc"), "hi").unwrap();
+        
+        let claim = DocClaim {
+            id: "t".into(),
+            source_uri: "repo://t.adoc".into(),
+            line: 1,
+            span: Span { start: 0, end: 0 },
+            raw: "`Y.adoc`".into(),
+            predicate: Predicate::FileExists {
+                path: "Y.adoc".into(),
+            },
+        };
+        let cfg = GrounderConfig::default();
+        let roots = vec![temp1.clone(), temp2.clone()];
+        assert_eq!(ground_claim(&claim, &roots, &cfg), ClaimResult::Grounded);
+        
+        std::fs::remove_dir_all(&temp1).unwrap();
+        std::fs::remove_dir_all(&temp2).unwrap();
     }
 
     #[test]
@@ -473,7 +537,8 @@ mod tests {
             },
         };
         let cfg = GrounderConfig::default();
-        match ground_claim(&claim, Path::new("/"), &cfg) {
+        let roots = vec![PathBuf::from("/")];
+        match ground_claim(&claim, &roots, &cfg) {
             ClaimResult::Unknown { .. } => {}
             other => panic!("expected Unknown, got {:?}", other),
         }
