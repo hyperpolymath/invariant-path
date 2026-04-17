@@ -1,2 +1,13 @@
 target/
 .invariant-path/
+node_modules/
+_build/
+deps/
+.elixir_ls/
+.cache/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+build/
+dist/
