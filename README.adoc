@@ -5,6 +5,10 @@
 :toc: preamble
 :icons: font
 
+image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/invariant-path"]
+image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com"]
+
 Invariant Path is a repo-native semantic overlay MVP for tracing how claims
 move from source evidence/specification to target conclusions.
 
@@ -32,6 +36,11 @@ cargo run -p invariant-path-cli -- scan --file ./README.md --artifact-uri repo:/
 cargo run -p invariant-path-cli -- annotations list --json
 ----
 
+[source,bash]
+----
+cargo run -p invariant-path-cli -- tui --file ./README.md --artifact-uri repo://README.md
+----
+
 == Launcher Integration
 
 The repository includes an E-Grade compliant launcher and desktop entry:
@@ -47,3 +56,24 @@ Install Start Menu + Desktop shortcuts:
 ----
 ./scripts/install-desktop.sh
 ----
+
+=== TUI Mode
+
+The launcher supports an interactive Terminal User Interface:
+
+[source,bash]
+----
+# Launch TUI (automatic fallback to scan if terminal not available)
+./invariant-path-launcher --tui
+
+# Direct CLI TUI access
+cargo run -p invariant-path-cli -- tui --file README.adoc
+----
+
+The TUI provides:
+* Interactive navigation through claim path suggestions
+* Keyboard controls (↑/↓ to navigate, q to quit)
+* Visual highlighting of selected items
+* Automatic fallback to CLI mode in non-interactive environments
+
+See link:docs/TUI-GUIDE.md[TUI Guide] for comprehensive documentation.
