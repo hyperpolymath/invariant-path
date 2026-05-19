@@ -17,7 +17,7 @@ struct Claim {
 struct TraceStep {
   step_id: Int,
   description: String,
-  affected_claims: List(Claim)
+  affected_claims: [Claim]
 }
 
 enum ViewState {
@@ -30,7 +30,7 @@ enum ViewState {
 
 struct Model {
   view_state: ViewState,
-  active_trace: List(TraceStep),
+  active_trace: [TraceStep],
   current_step_index: Int,
   is_scanning: Bool,
   history_depth: Int
@@ -41,7 +41,7 @@ struct Model {
 enum Msg {
   Navigate(ViewState),
   StartScan,
-  ScanComplete(List(TraceStep)),
+  ScanComplete([TraceStep]),
   SelectStep(Int),
   PopState
 }
@@ -49,7 +49,7 @@ enum Msg {
 // ── TEA Logic ────────────────────────────────────────────────────────────────
 
 fn invariant_path_init() -> Model {
-  {
+  #{
     view_state: ViewState::Dashboard,
     active_trace: [],
     current_step_index: -1,
@@ -63,7 +63,7 @@ fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
     { view_state: v, active_trace: t, current_step_index: i, is_scanning: s, history_depth: h } => {
       match msg {
         Navigate(new_state) => {
-          {
+          #{
             view_state: new_state,
             active_trace: t,
             current_step_index: i,
@@ -73,7 +73,7 @@ fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
         }
 
         StartScan => {
-          {
+          #{
             view_state: v,
             active_trace: t,
             current_step_index: i,
@@ -83,7 +83,7 @@ fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
         }
 
         ScanComplete(new_trace) => {
-          {
+          #{
             view_state: ViewState::TraceViewer,
             active_trace: new_trace,
             current_step_index: 0,
@@ -93,7 +93,7 @@ fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
         }
 
         SelectStep(new_idx) => {
-          {
+          #{
             view_state: v,
             active_trace: t,
             current_step_index: new_idx,
@@ -104,7 +104,7 @@ fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
 
         PopState => {
           if h > 0 {
-            {
+            #{
               view_state: ViewState::Dashboard,
               active_trace: t,
               current_step_index: -1,
@@ -112,7 +112,7 @@ fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
               history_depth: h - 1
             }
           } else {
-            {
+            #{
               view_state: v,
               active_trace: t,
               current_step_index: i,
@@ -129,7 +129,7 @@ fn invariant_path_update(@linear msg: Msg, @linear model: Model) -> Model {
 fn invariant_path_view(model: Model) -> String {
   match model.view_state {
     Dashboard       => "INVARIANT PATH: Claim Tracing Dashboard",
-    TraceViewer     => "TRACE VIEWER: Step " + (if model.current_step_index >= 0 { "Active" } else { "None" }),
+    TraceViewer     => "TRACE VIEWER: Step " ++ (if model.current_step_index >= 0 { "Active" } else { "None" }),
     IntegrityReport => "INTEGRITY REPORT: Factual Claim Grounding"
   }
 }
