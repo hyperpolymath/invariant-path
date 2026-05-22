@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 #![forbid(unsafe_code)]
 
 use crate::model::{now_rfc3339, Annotation, OverlayState, Status, Visibility};

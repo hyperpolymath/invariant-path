@@ -1,4 +1,4 @@
-; SPDX-License-Identifier: PMPL-1.0-or-later
+; SPDX-License-Identifier: MPL-2.0
 ; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath)
 ;
 ; 0-AI-MANIFEST.a2ml — Universal AI entry point for Invariant Path
@@ -9,7 +9,7 @@
     (name "invariant-path")
     (full-name "Invariant Path")
     (version "0.2.0")
-    (license "PMPL-1.0-or-later")
+    (license "MPL-2.0")
     (author "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>")
     (status "starred"))
 

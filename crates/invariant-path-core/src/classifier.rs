@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 #![forbid(unsafe_code)]
 
 use crate::model::{ClaimCandidate, Classification, ClassificationOutcome, InvariantType};
