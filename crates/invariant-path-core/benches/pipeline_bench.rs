@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use invariant_path_core::pipeline::scan_artifact;
 use invariant_path_core::model::Visibility;
