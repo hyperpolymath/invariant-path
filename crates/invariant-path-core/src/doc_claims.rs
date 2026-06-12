@@ -381,7 +381,10 @@ fn walk(
             Ok(t) => t,
             Err(_) => continue,
         };
-        let rel = path.strip_prefix(scan_root).unwrap_or(&path).to_string_lossy();
+        let rel = path
+            .strip_prefix(scan_root)
+            .unwrap_or(&path)
+            .to_string_lossy();
         let source_uri = format!("repo://{}", rel);
         let claims = extract_claims(&text, &source_uri);
         for claim in claims {
@@ -398,7 +401,9 @@ fn walk(
 /// Convenience: split records into ungrounded vs other for CI exit
 /// codes. The "panic-attack for docs" semantics: any Ungrounded claim
 /// is a CI failure; Unknown is informational.
-pub fn partition_failures(records: &[DocClaimRecord]) -> (Vec<&DocClaimRecord>, Vec<&DocClaimRecord>) {
+pub fn partition_failures(
+    records: &[DocClaimRecord],
+) -> (Vec<&DocClaimRecord>, Vec<&DocClaimRecord>) {
     let mut failures = Vec::new();
     let mut ok_or_unknown = Vec::new();
     for r in records {
@@ -505,7 +510,7 @@ mod tests {
         std::fs::create_dir_all(&temp1).unwrap();
         std::fs::create_dir_all(&temp2).unwrap();
         std::fs::write(temp2.join("Y.adoc"), "hi").unwrap();
-        
+
         let claim = DocClaim {
             id: "t".into(),
             source_uri: "repo://t.adoc".into(),
@@ -519,7 +524,7 @@ mod tests {
         let cfg = GrounderConfig::default();
         let roots = vec![temp1.clone(), temp2.clone()];
         assert_eq!(ground_claim(&claim, &roots, &cfg), ClaimResult::Grounded);
-        
+
         std::fs::remove_dir_all(&temp1).unwrap();
         std::fs::remove_dir_all(&temp2).unwrap();
     }

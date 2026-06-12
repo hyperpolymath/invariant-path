@@ -419,8 +419,7 @@ fn run_doc_claims(args: DocClaimsArgs) -> Result<(), String> {
                 "{} {}:{}  {}",
                 result_tag, r.claim.source_uri, r.claim.line, r.claim.raw
             );
-            if let ClaimResult::Ungrounded { reason } | ClaimResult::Unknown { reason } =
-                &r.result
+            if let ClaimResult::Ungrounded { reason } | ClaimResult::Unknown { reason } = &r.result
             {
                 println!("         reason: {reason}");
             }
