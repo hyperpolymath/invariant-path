@@ -38,8 +38,8 @@ same-cube invariant, locating *which* face breaks the cube and *where*.
 face source (greet/rattle.affine, …)         ← evidence / specification
         │  preview-<face>                     ← transition (transformer T)
         ▼
-canonical text (normalised)                   ← intermediate target
-        │  byte-equality vs canonical.affine  ← grounding check
+typed-wasm module (compile --face)            ← the cube itself
+        │  sha256-equality vs canonical wasm  ← grounding check
         ▼
 "same cube" holds for this program            ← conclusion (Grounded | Ungrounded)
 ```
@@ -63,21 +63,28 @@ workspace at its corpus (the `tools/invariant-path/` hook), e.g.:
 just invariant-path same-cube examples/
 ```
 
-## What v1 catches
+## What it catches
 
-- A face whose `preview-*` lowering no longer normalises to the canonical
-  cube (the cross-face equality break the per-face snapshots miss).
-- A face example that fails to parse after lowering (round-trip break).
-- A corpus where one face silently encodes a *different* program (e.g. a
-  changed string literal or dropped statement).
+- A face whose lowering compiles to a **different typed-wasm module** than the
+  canonical reference (the cross-face equality break the per-face snapshots
+  miss). Comparing wasm — the cube itself — also avoids text-only
+  false-positives (e.g. tail-expression vs statement lowering, observationally
+  identical but textually different).
+- A face example that fails to parse or compile (round-trip / build break).
+- A corpus where one face silently encodes a *different* program.
 
-## What v1 does NOT catch (yet)
+When faces split into more than one wasm class, the `preview-*` text diff is
+printed per divergence so you can see *where* the lowering parts ways.
 
-- *Semantic* divergence below the canonical-text level — two different
-  canonical texts that nevertheless typecheck to the same cube. v1
-  compares normalised canonical text, not ASTs. (AST-level equality is
-  the planned v2 grounding, once the compiler exposes a stable AST dump.)
-- typed-wasm equality. The chain "same canonical ⇒ same wasm" is asserted
-  by the compiler, not re-checked here.
+## Limits
+
+- **Byte-identical** wasm is stricter than **observational** equivalence: two
+  faces can print the same thing and return the same value yet emit different
+  wasm. The grounded `greet` result is exactly this — rattle/pseudo/lucid vs
+  canonical/jaffa/cafe split into two classes over a trailing-statement
+  lowering choice. The tool reports the wasm *classes* and leaves "are these
+  classes observationally equal?" to the reader; it does not execute the
+  modules to compare runtime output.
+- It grounds the corpora it is given; it does not enumerate all programs.
 - Effect-handler lowering soundness (tracked in affinescript #555); a
   face that exercises `handle` may converge in text yet diverge at runtime.
