@@ -15,6 +15,10 @@ build:
 run-cli:
     cargo run --release --bin invariant-path-cli
 
+# Ground the AffineScript "different faces, same cube" invariant (faces profile)
+same-cube corpus="examples/same-cube/greet":
+    ./scripts/verify-same-cube.sh {{corpus}} --out .machine_readable/audits/same-cube.jsonl
+
 # Run the TUI
 run-tui:
     ./invariant-path-launcher --auto

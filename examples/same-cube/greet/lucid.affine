@@ -1,0 +1,15 @@
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+--
+-- Same-cube corpus "greet" — LucidScript (PureScript / Haskell) face.
+-- Lowers via `preview-lucid` to the canonical cube in ./canonical.affine.
+-- face: lucidscript
+
+module Greet where
+
+effect IO {
+  fn println(s: String) -> ();
+}
+
+main :: -{IO}-> ()
+main () = println("Hello, faces!")
