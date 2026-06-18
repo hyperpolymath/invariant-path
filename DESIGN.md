@@ -47,3 +47,9 @@
 - Decision: make `scripts/install-desktop.sh` remove a destination `.desktop` file if it exists but is not writable, then reinstall with deterministic modes (`444` in app menu, `555` on Desktop/Shortcuts).
 - Tradeoff: replacement is explicit rather than in-place update, but content and permissions remain deterministic from template + destination policy.
 - Reasoning: GNU `install` can fail on existing read-only targets; KDE/Plasma desktop launchers also need execute bits to avoid launch aborts.
+
+## 2026-06-18 — Faces same-cube profile (`faces`)
+
+- Decision: add a `faces` profile (`profiles/faces.md`), a same-cube corpus (`examples/same-cube/`), and a verifier (`scripts/verify-same-cube.sh`) that grounds the AffineScript "different faces, same cube" invariant — every face's `preview-*` lowering must normalise to the same canonical text.
+- Tradeoff: v1 compares normalised canonical *text*, not ASTs, and SKIPs when no `affinescript` binary is reachable (grounding happens in CI). It can't yet catch two different canonical texts that typecheck to the same cube.
+- Reasoning: per-face snapshot tests (`affinescript/tests/faces/`) catch drift *within* a face but never compare face A's cube against face B's. The cross-face equality is the load-bearing claim; this profile is the claim-path debugger that locates which face breaks it. Doc-profile shape (markdown + script), so no change to the Rust core or CLI — consistent with the `pmpl` / `standards-docs` profiles.

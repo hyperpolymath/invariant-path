@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+#
+# Same-cube corpus "greet" — CafeScripto (CoffeeScript) face.
+# Lowers via `preview-cafe` to the canonical cube in ./canonical.affine.
+# face: cafescripto
+
+effect IO {
+  fn println(s: String) -> ();
+}
+
+fn main() -{IO}-> () {
+  println("Hello, faces!");
+}

@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+//
+// Same-cube corpus "greet" — the reference (canonical) face.
+// Every sibling file in this directory is the SAME program written in a
+// different face. Each face's `preview-*` lowering must normalise to the
+// canonical text below ("different faces, same cube").
+// face: canonical
+
+effect IO {
+  fn println(s: String) -> ();
+}
+
+fn main() -{IO}-> () {
+  println("Hello, faces!");
+}

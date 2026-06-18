@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+//
+// Same-cube corpus "greet" — JaffaScript (JavaScript / TypeScript) face.
+// Lowers via `preview-js` to the canonical cube in ./canonical.affine.
+// face: jaffascript
+
+effect IO {
+  fn println(s: String) -> ();
+}
+
+function main() -{IO}-> () {
+  println("Hello, faces!");
+}

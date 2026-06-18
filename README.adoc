@@ -21,8 +21,9 @@ It is a claim-path debugger, not a truth engine.
 * `schemas/annotation.schema.json` — JSON schema for persisted annotations
 * `docs/ARCHITECTURE.md` — minimal architecture proposal
 * `docs/EXTENDING.md` — extension guide for invariant types and heuristics
-* `examples/` — seeded and realistic examples
-* `profiles/` — profile notes for `echidna`, `panll`, and `hypatia`
+* `examples/` — seeded and realistic examples (incl. `examples/same-cube/` — the AffineScript faces corpus)
+* `profiles/` — profile notes for `echidna`, `panll`, `hypatia`, `pmpl`, and `faces` (AffineScript "different faces, same cube")
+* `scripts/verify-same-cube.sh` — grounds the faces same-cube invariant (see `profiles/faces.md`)
 
 == Quick Start
 
