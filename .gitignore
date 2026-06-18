@@ -11,3 +11,7 @@ deps/
 Thumbs.db
 build/
 dist/
+
+# Agda build artifacts
+*.agdai
+_build/

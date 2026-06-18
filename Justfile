@@ -19,6 +19,10 @@ run-cli:
 same-cube corpus="examples/same-cube/greet":
     ./scripts/verify-same-cube.sh {{corpus}} --out .machine_readable/audits/same-cube.jsonl
 
+# Machine-check the same-cube proofs (Agda, --safe)
+proofs:
+    agda --safe proofs/SameCube.agda
+
 # Run the TUI
 run-tui:
     ./invariant-path-launcher --auto
