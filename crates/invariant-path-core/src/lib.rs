@@ -12,7 +12,7 @@ pub mod pipeline;
 mod tests {
     use crate::annotations::AnnotationStore;
     use crate::model::{Classification, InvariantType, Status, Visibility};
-    use crate::pipeline::scan_artifact;
+    use crate::pipeline::{scan_artifact, scan_multi_root};
     use proptest::prelude::*;
 
     proptest! {
@@ -96,6 +96,33 @@ mod tests {
         let ann = first(text);
         assert_eq!(ann.classification, Classification::Conflation);
         assert_eq!(ann.invariant_type, InvariantType::NormativeBridge);
+    }
+
+    #[test]
+    fn multi_root_scan_concatenates_per_artifact_results() {
+        let roots = [
+            (
+                "repo://root1.md",
+                "This theorem guarantees production safety.",
+            ),
+            (
+                "repo://root2.md",
+                "This benchmark proves the model can reason.",
+            ),
+        ];
+        let anns = scan_multi_root(&roots, "tester", Visibility::Private);
+        assert_eq!(anns.len(), 2);
+        assert_eq!(anns[0].artifact_uri, "repo://root1.md");
+        assert_eq!(anns[1].artifact_uri, "repo://root2.md");
+        // Results must match scanning each root individually, in order.
+        let solo = scan_artifact(
+            "repo://root2.md",
+            roots[1].1,
+            "tester",
+            Visibility::Private,
+        );
+        assert_eq!(anns[1].id, solo[0].id);
+        assert_eq!(anns[1].classification, solo[0].classification);
     }
 
     #[test]

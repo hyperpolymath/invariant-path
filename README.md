@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 -->
 
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity)](https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/invariant-path)
-[![License: PMPL-1.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://github.com/hyperpolymath/palimpsest-license) <embed
+[![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE) <embed
 src="https://api.thegreenwebfoundation.org/greencheckimage/github.com"
 data-link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com" />
 
@@ -49,43 +49,25 @@ cargo run -p invariant-path-cli -- annotations list --json
 ```
 
 ```bash
-cargo run -p invariant-path-cli -- tui --file ./README.md --artifact-uri repo://README.md
+cargo run -p invariant-path-cli -- doc-claims scan --file ./README.md --json
 ```
 
-# Launcher Integration
+# CLI Surface
 
-The repository includes an E-Grade compliant launcher and desktop entry:
+The CLI currently provides five subcommands:
 
-- Launcher script:
-  `/var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh`
+- `scan` — extract and classify claim transitions from a file
+- `annotations` — list/add/update/accept/dismiss/clarify persisted annotations
+- `overlay` — toggle overlay state
+- `profiles` — list built-in scan profiles (`generic`, `echidna`, `panll`, `hypatia`)
+- `doc-claims` — ground factual doc claims (file paths, command hygiene) against the filesystem
 
-- Repo-root command: `./invariant-path`
+There is no interactive TUI yet; all interaction is CLI-first with `--json` output.
 
-- Desktop template: `desktop/invariant-path.desktop`
+# Launcher Integration (maintainer machine only)
 
-- Installer: `scripts/install-desktop.sh`
-
-Install Start Menu + Desktop shortcuts:
-
-```bash
-./scripts/install-desktop.sh
-```
-
-## TUI Mode
-
-The launcher supports an interactive Terminal User Interface:
-
-```bash
-# Launch TUI (automatic fallback to scan if terminal not available)
-./invariant-path-launcher --tui
-
-# Direct CLI TUI access
-cargo run -p invariant-path-cli -- tui --file README.adoc
-```
-
-The TUI provides: \* Interactive navigation through claim path
-suggestions \* Keyboard controls (↑/↓ to navigate, q to quit) \* Visual
-highlighting of selected items \* Automatic fallback to CLI mode in
-non-interactive environments
-
-See [TUI Guide](docs/TUI-GUIDE.md) for comprehensive documentation.
+The `./invariant-path` and `./invariant-path-launcher` wrappers, the desktop
+template (`desktop/invariant-path.desktop`), and `scripts/install-desktop.sh`
+delegate to a launcher script that lives outside this repository
+(`/var/mnt/eclipse/repos/.desktop-tools/`). On any other machine they print a
+clear message and exit; use `cargo run -p invariant-path-cli` directly instead.
