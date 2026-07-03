@@ -115,12 +115,7 @@ mod tests {
         assert_eq!(anns[0].artifact_uri, "repo://root1.md");
         assert_eq!(anns[1].artifact_uri, "repo://root2.md");
         // Results must match scanning each root individually, in order.
-        let solo = scan_artifact(
-            "repo://root2.md",
-            roots[1].1,
-            "tester",
-            Visibility::Private,
-        );
+        let solo = scan_artifact("repo://root2.md", roots[1].1, "tester", Visibility::Private);
         assert_eq!(anns[1].id, solo[0].id);
         assert_eq!(anns[1].classification, solo[0].classification);
     }
