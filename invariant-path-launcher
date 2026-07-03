@@ -21,6 +21,15 @@ PID_FILE="/tmp/${APP_NAME,,}-server.pid"
 LOG_FILE="/tmp/${APP_NAME,,}-server.log"
 MODE="${1:---auto}"
 
+# This wrapper only works on the maintainer's machine, where the core
+# launcher and target repo exist. Everywhere else, fail with guidance
+# instead of a confusing path error.
+if [ ! -x "$CORE_LAUNCHER" ] || [ ! -d "$REPO_DIR" ]; then
+  echo "[$APP_NAME] core launcher or repo not found (maintainer machine only)." >&2
+  echo "[$APP_NAME] use: cargo run -p invariant-path-cli -- --help" >&2
+  exit 1
+fi
+
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'

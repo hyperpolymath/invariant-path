@@ -5,6 +5,22 @@ use crate::classifier::classify_candidate;
 use crate::extractor::extract_candidates;
 use crate::model::{make_annotation_id, now_rfc3339, Annotation, Status, Visibility};
 
+/// Scan several artifacts in one pass, e.g. every root document of a corpus.
+/// Each root is an `(artifact_uri, text)` pair; results are concatenated in
+/// input order so annotation IDs remain stable per artifact.
+pub fn scan_multi_root(
+    roots: &[(&str, &str)],
+    created_by: &str,
+    visibility: Visibility,
+) -> Vec<Annotation> {
+    roots
+        .iter()
+        .flat_map(|(artifact_uri, text)| {
+            scan_artifact(artifact_uri, text, created_by, visibility.clone())
+        })
+        .collect()
+}
+
 pub fn scan_artifact(
     artifact_uri: &str,
     text: &str,

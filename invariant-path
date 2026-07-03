@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MPL-2.0
 set -euo pipefail
-exec /var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh --cli "$@"
+CORE_LAUNCHER="/var/mnt/eclipse/repos/.desktop-tools/invariant-path-launcher.sh"
+if [ -x "$CORE_LAUNCHER" ]; then
+  exec "$CORE_LAUNCHER" --cli "$@"
+fi
+echo "invariant-path: maintainer launcher not found at $CORE_LAUNCHER" >&2
+echo "invariant-path: falling back to 'cargo run -p invariant-path-cli'" >&2
+exec cargo run -p invariant-path-cli -- "$@"
