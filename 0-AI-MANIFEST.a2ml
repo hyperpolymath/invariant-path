@@ -16,9 +16,78 @@
   (milestones
     (phase-a "COMPLETE" "2026-04-15" "Multi-root grounding, proptest, and benchmarks"))
 
+  ;; ==========================================================================
+  ;; CORE IDEA — CANONICAL STATEMENT
+  ;;
+  ;; READ THIS BEFORE WRITING ANYTHING ABOUT THIS REPOSITORY.
+  ;;
+  ;; This statement has been re-derived from the code by successive agents and
+  ;; distorted each time — each restatement plausible, each drifting further
+  ;; from the idea. Treat the text below as the definition, not as one
+  ;; description among several.
+  ;;
+  ;; DO NOT paraphrase it in commits, PRs, docs, issues or manifests.
+  ;; QUOTE it, or link to it. If you believe it is wrong, say so explicitly
+  ;; and argue the point — do not silently improve the wording.
+  ;; ==========================================================================
+  (core-idea
+    (statement
+      "A claim can hold on BOTH sides of a domain transition and still NOT MEAN
+       THE SAME THING on both sides. The invariant is not 'true here and true
+       there' — it is 'the SAME CLAIM here and there'. That path is what must
+       be invariant.")
+
+    (why-tooling-is-required
+      "The failure is silent BY CONSTRUCTION: cross-domain equality is not
+       expressible from inside either domain. A test in domain A checks A
+       against itself; a test in B checks B against itself. Every per-domain
+       test can pass forever while the load-bearing claim is already broken —
+       and everything looks green, because each side really is internally
+       consistent.")
+
+    (worked-example
+      "AffineScript presents several FACES — surface syntaxes — that all lower
+       to one canonical form. Per-face snapshot tests catch drift WITHIN a face
+       and can never compare face A's cube against face B's. The cross-face
+       equality is the load-bearing claim, and no per-face test can express
+       it. 'Different faces, same cube.'")
+
+    (what-this-is-not
+      "Not a truth engine. It does not decide whether a claim is true. It shows
+       the path a claim took and where along that path it stopped meaning what
+       it meant at the start.")
+
+    (dual "007"
+      "007's hermeneutic semantics is the MIRROR of this repo, and the two are
+       halves of one concern:
+         invariant-path : DIFFERENT syntax, must be the SAME semantics
+                          (forms diverge in meaning, each self-consistent)
+         007            : the SAME syntax, may be READ DIFFERENTLY
+                          (one form carries two readings; the wrong one is assumed)
+       Many forms/one meaning, against one form/many meanings. Both fail
+       SILENTLY, because the surface text carries no signal of the divergence.
+       Work on either one without reading the other and the fix is incomplete.")
+
+    (profile-rule
+      "A PROFILE is a lens onto a corpus that lives ELSEWHERE. It names a target
+       corpus by path and VENDORS NOTHING — see profiles/pmpl.md, which points
+       at the palimpsest-license tree and copies no part of it. A profile
+       carrying a copy of its target drifts from the real thing and then grounds
+       a claim about a stale fixture while reporting success: this tool's own
+       failure mode, turned inward. Profiles are named for their TARGET, not for
+       one claim about it.")
+
+    (known-deviation
+      "examples/same-cube/ currently vendors an AffineScript corpus and the
+       profile is named 'faces' rather than 'affinescript' — both violate
+       profile-rule above. Tracked as issue #54; not silently corrected."))
+
   (purpose
     "Monorepo for Invariant Path heuristic extraction and classification.
-     Provides a shared CLI for multiple estate components (echidna, panll, hypatia).")
+     Provides a shared CLI for multiple estate components (echidna, panll,
+     hypatia). NOTE: this describes the PLUMBING. For what the repository is
+     FOR, see core-idea above — reading only this line is how the idea has
+     previously been lost.")
 
   (canonical-locations
     (ai-manifest     "0-AI-MANIFEST.a2ml"           "THIS FILE")
