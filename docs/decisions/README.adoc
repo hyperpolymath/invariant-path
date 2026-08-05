@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Architecture Decision Records
+
+Decisions about *what this repository is for* and *what its parts mean* live
+here, one file per decision, numbered and never renumbered.
+
+== Why here and not in DESIGN.md
+
+`DESIGN.md` is a dated build log: what was done, and when. It answers "why is
+the code shaped like this?" and it is read by someone already working in the
+tree.
+
+An ADR answers "what is the claim, and what argument survived?" — and it has to
+be findable by someone who has not yet formed an opinion. That distinction is
+not academic in this repository. The core idea of Invariant Path was written
+down correctly, and only, in a dated `DESIGN.md` entry (2026-06-18). It was
+accurate and it was invisible: readers took the plumbing description from the
+manifest, went to the code, and reconstructed the idea their own way each time.
+The cure was to move the statement to the file agents read first and mark it
+do-not-paraphrase. This directory is the same cure for arguments rather than
+statements.
+
+Rule of thumb: if getting it wrong would cost a rebuild, it is an ADR.
+
+== Convention
+
+* Filename `NNNN-kebab-slug.adoc`, numbered from `0001`.
+* SPDX header on every file; prose in this repository is `CC-BY-SA-4.0`.
+* Status is one of `Proposed`, `Accepted`, `Deprecated`, `Superseded by NNNN`,
+  `Rejected`. Superseded records are kept, never deleted — the wrong turn is
+  part of the record.
+* Cite `file:line` with the commit SHA when the citation is to another
+  repository, because line numbers drift and several estate repositories have
+  more than one working copy at different commits.
+* Quote canonical statements; do not restate them.
+
+== Index
+
+[cols="1,4,1",options="header"]
+|===
+| ADR | Title | Status
+
+| link:0001-the-sortal-layer.adoc[0001]
+| The sortal layer — what survives the case against the knot layer
+| Accepted
+|===

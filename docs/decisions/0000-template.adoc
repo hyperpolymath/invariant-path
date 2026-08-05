@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= ADR-0000: Template
+
+*Date:* YYYY-MM-DD
+
+*Status:* Proposed | Accepted | Deprecated | Superseded by NNNN | Rejected
+
+== Context
+
+What is the issue, and why does it need deciding now? State the problem, not the
+solution. If the decision reverses an earlier position, say what that position
+was and why it was plausible — a reader who cannot reconstruct the losing case
+will re-derive it.
+
+== Decision
+
+What was decided, in the imperative. One paragraph if possible.
+
+== Argument
+
+What was actually established, and how far it reaches. Name the fragment in
+which the opposing case is *right*, because an unbounded claim is not checkable.
+Where a conclusion rests on a source outside this repository, cite it as
+`path:line` with a commit SHA.
+
+== Consequences
+
+What becomes easier, what becomes harder, and what is now load-bearing that was
+not before.
+
+== Open
+
+Questions this record deliberately does not settle. An ADR that resolves a
+question it has no evidence for is worse than one that leaves it open — mark
+them, and say what evidence would settle each.
