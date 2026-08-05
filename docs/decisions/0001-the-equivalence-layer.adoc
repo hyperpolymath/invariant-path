@@ -193,8 +193,8 @@ Everything below turns on the architecture not living in that fragment.
 
 === Separability is reachability, not a verdict profile
 
-Two tokens, affine — one use each — pooled by a warranted merge that supports
-two claims, each above its sufficiency floor. The sweep tests the partition
+Two tokens, affine — *at most* one use each — pooled by a warranted merge that
+supports two claims, each above its sufficiency floor. The sweep tests the partition
 "first token to first claim, second to second": both parts pass in isolation, so
 the formula returns *false tangle*.
 
@@ -216,6 +216,43 @@ Realness is a *reachability* property of the space of Layer-1/2-passing states
 under the legal moves, with strand endpoints pinned by resource identity.
 Path-connectivity is never a function of pointwise vertex properties, so no
 quantified formula over static verdicts on subdiagrams computes it.
+
+[#discipline]
+==== Which resource discipline, exactly
+
+*Affine — at most once — not linear.* Linear would require every token to be
+consumed exactly once, so an uncited piece of evidence sitting in the store
+would be a type error. That is the wrong norm for an evidence store: weakening
+must be free.
+
+The argument above is indifferent to the choice. What it leans on is the
+*absence of contraction* — a token cannot be duplicated to stage the separation
+— and linear and affine both forbid that. They differ only over weakening, which
+the argument never uses. So the reachability result holds under either reading;
+only the gloss was overstated.
+
+But neither label is exactly right, and the gap is load-bearing. This
+architecture does not forbid contraction outright: *resemblance-warrant-on-merge*
+permits it *when warranted*. The discipline is therefore affine with a guarded
+contraction rule — contraction available only against a warrant — which is not
+plain affine logic but a controlled-contraction variant of it.
+
+That distinction is exactly where the doubling attack lives. Two failure modes
+double-count evidence, and affinity sees only one of them:
+
+* *Contraction taken freely* — one token duplicated and spent twice. Banned by
+  affinity, caught by the ledger.
+* *Contraction never taken though mandatory* — two tokens that are one token,
+  never merged, so corroboration is counted twice. **Affinity is blind to this**,
+  because nothing illegal happens: two distinct labels really are spent once
+  each.
+
+The doubling attack is the second. It is not an illegal contraction; it is a
+*missing* one. This sharpens the dependency argument below: Layer 3 is not
+merely an input to Layer 2's accounting, it closes a specific and permanent
+blind spot in it. No resource discipline can detect a contraction it was never
+asked to perform, because the omission is invisible in the resource algebra —
+it is a fact about identity, which lives outside that algebra.
 
 === The purpose quantifier is beyond any finite sweep
 
@@ -327,6 +364,13 @@ labels are what forgery attacks.
 Layer 3 is therefore upstream of Layer 2's soundness, not decoration downstream
 of it. The dependency runs both ways through the third layer, which is what
 being load-bearing means.
+
+Stated at full strength (see <<discipline>>): the omission is not merely
+undetected, it is *undetectable in the resource algebra*. Affinity governs
+contractions that are taken; a contraction that was never taken leaves no trace
+in it, because two distinct labels really were spent once each. Whether they
+were the same token is a fact about identity, and identity is not a resource
+property. So this is not a gap Layer 2 could close by being more careful.
 
 == Relation to the canonical statement
 
@@ -458,6 +502,15 @@ well as knot diagrams.
 
 === Not settled here
 
+* *Who owns the total-evidence requirement.* Affinity makes weakening free:
+  leaving evidence uncited is costless in the resource algebra, which is the
+  right call for a store but leaves cherry-picking invisible. Suppressing
+  contrary evidence is epistemically culpable and violates no rule in any of the
+  three layers — Layer 1 sees well-formed structure, Layer 2 sees a strand that
+  passes for its use, Layer 3 sees a presentation identical to itself. Detecting
+  it requires comparing the argument against evidence *not in it*, so it is not a
+  property of the committed web at all. Either a fourth obligation or an explicit
+  out-of-scope ruling; currently it is neither.
 * Whether guarded self-support — bisimulation-style arguments, precedent whose
   authority is constituted by continued citation — is admitted. If it is,
   closures exist and knot types proper become realizable. If it is not, the
