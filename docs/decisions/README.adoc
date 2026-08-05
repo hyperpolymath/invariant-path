@@ -41,7 +41,7 @@ Rule of thumb: if getting it wrong would cost a rebuild, it is an ADR.
 |===
 | ADR | Title | Status
 
-| link:0001-the-equivalence-layer.adoc[0001]
-| The equivalence layer — what survives the case against the knot layer
+| link:0001-the-sortal-layer.adoc[0001]
+| The sortal layer — what survives the case against the knot layer
 | Accepted
 |===

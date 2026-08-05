@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= ADR-0001: The equivalence layer — what survives the case against the knot layer
+= ADR-0001: The sortal layer — what survives the case against the knot layer
 
 *Date:* 2026-08-05
 
@@ -41,11 +41,31 @@ the core idea was stated correctly and only in a dated `DESIGN.md` entry
 == Decision
 
 *Layer 3 is retained, and its charter is restated.* It is not a detector of
-knots in a diagram of the argument. It is the *equivalence layer*: it
-adjudicates *identity of an argument across presentations*, and it issues
-certificates rather than verdicts.
+knots in a diagram of the argument. It is the *sortal layer*: it adjudicates
+*identity of an argument across presentations*, and it issues certificates
+rather than verdicts.
 
-The name "knot layer" is retained only informally. See <<naming>>.
+*The name is "sortal", ruled 2026-08-05.* A sortal — Locke, Strawson, Geach,
+Wiggins, Lowe — is a concept that supplies a *criterion of identity* and a
+*principle of counting* for its instances. That is this layer's charter twice
+over: adjudicating identity across presentations is the criterion, and the
+doubling attack, where corroboration weight is 2 or 1 according to whether two
+presentations are one argument, is the count. The name also states the layer
+ORDER, which no alternative did: you cannot account resources over instances
+until you have fixed what counts as one instance, so the sortal must be settled
+before Layer 2's accounting is sound (see <<arrow>>).
+
+It was chosen over nine alternatives on four weighted criteria — accuracy,
+collision-freedom, peer fit with "type" and "trope", and honesty about the
+mathematics. Runner-up was *congruence* (an equivalence relation compatible with
+the structure — technically sharper, but already live inside Layer 2's own
+soundness proofs). The former working title, *the equivalence layer*, came
+LAST: it escapes the metaphor collision only to land in a charter collision,
+since quandledb self-describes as the "invariant/equivalence + semantic-identity"
+layer and Tangle ships a "storage/equivalence layer". See <<naming>>.
+
+"Knot layer" is retired, not retained. The two certificate names below are
+unaffected and keep their existing terms.
 
 == The prosecution, and which counts fell
 
@@ -317,8 +337,8 @@ illicit mixed-order transports.
 
 == The restated charter
 
-Layer 3 adjudicates *identity of an argument across presentations*, and delivers
-one of two things:
+The sortal layer adjudicates *identity of an argument across presentations*, and
+delivers one of two things:
 
 *Equivalence certificate* — a sequence of moves, every intermediate of which
 passes Layers 1 and 2, transforming one presentation into the other. Isotopy to
@@ -349,6 +369,7 @@ insufficiency carries a witness naming the coordinate and edge responsible
 (Maybe (String, String))`, at `69221ad`). Certificate-shaped output is the
 established idiom in this architecture, not a novelty introduced for Layer 3.
 
+[#arrow]
 == The reversed dependency arrow
 
 The design rationale ran Layer 1 → Layer 3: temporality sits in Layer 1 so the
@@ -409,6 +430,183 @@ What is *not* claimed: that these are one mechanism, or that a tool for one is a
 tool for the other. Domain transitions cross formalisms; presentation moves stay
 within one. Whether a single quotient covers both is open, and would need
 argument rather than assertion.
+
+[#naming]
+== The collision, measured
+
+An earlier draft of this record stated that the knot vocabulary lived only in
+conversation and in this ADR's own branch. *That was wrong*, and the correction
+matters more than the name.
+
+*The three-layer metaphor is committed on main, one repository over.*
+`_LANGUAGES _SET/nextgen-language-evangeliser` carries "types → carrier · tropes
+→ recurring equivalence-figures · knot theory → certificate" across seven files
+(`EXPLAINME.adoc:154-156`, `docs/theory/CORRESPONDENCE-MODEL.adoc:107-112`,
+`README.adoc:66`, `CLAUDE.md:24`, `ROADMAP.adoc:23`, and two `META.a2ml`
+entries), and already names invariant-path as "the governance front-end". It has
+its own ADR-6 disclaiming literal knot theory as "an aspirational lens, not a
+computation" — the same conclusion this record reaches by argument. The public
+estate site (`_WEBSITES _SET/hyperpolymath/README.adoc:33`) also carries the
+metaphorical sense fourteen lines from a literal one.
+
+*The literal surface is roughly three times what this record first claimed* —
+about 13,355 match lines estate-wide for knot/unknot/tangle/braid/quandle/skein/
+Reidemeister/isotopy. The largest holder is not quandledb (1,507) but
+*Tangle-the-language* (4,699), whose stated premise is "programs are braids and
+equivalence is isotopy", with a real `braid_equiv` engine and mechanised
+isotopy in `proofs/Tangle.lean`. Two further repositories own this layer's exact
+former words: `frayed-knot-toolkit` (Agda `Unknot`, `Strand`,
+`project : Knot -> Strand -> StrandPath`) and
+`fraying-model-computational-testbed`.
+
+*A correction to this record's own earlier text:* `typell/crates/typell-tangle`
+was dismissed here as an unrelated homonym. It is not — it maps Tangle's
+braid-word types. The dismissal was wrong.
+
+*Blast radius of the rename is small:* about eleven prose and metadata files
+across three repositories, and *zero code identifiers, type names, function
+names, test names, or schema surface*. invariant-path's own main branch was
+clean; the vocabulary existed only on this unmerged branch. Renaming here, before
+merge, costs two files. The remaining files in nextgen-language-evangeliser and
+on the public site are follow-up work, not a blocker.
+
+=== QuandleDB is a homonym — the open probe is closed, answered NO
+
+The earlier draft asked whether QuandleDB's "invariant/equivalence +
+semantic-identity" API could carry argument presentations. It cannot, on three
+independent grounds, and the question should not be reopened without new
+evidence.
+
+*The object is wrong and hard-coded.* QuandleDB is a fixed twenty-column SQLite
+table keyed by `knot_name` (`server/serve.jl:39-60`); the sole ingestion path is
+`KnotRecord → PD code → Skein.to_planardiagram → quandle_descriptor(::PlanarDiagram)`
+(`server/quandle_semantic.jl:489`). There is no generic-structure entry point.
+
+*The equivalence engine is a GROUP BY, and the certificate-shaped parts are
+stubs.* `find_equivalent` resolves to two SQL selects over `descriptor_hash` and
+`quandle_key` (`server/serve.jl:332-353`); `find_path` — the only stage shaped
+like an equivalence certificate — is an explicit stub deferring "full BFS path
+search" (`Evaluator.jl:664-691`), as is `match`. The e-graph engine the
+whitepaper makes central exists only as prose plus a TLA+ model: a search for
+egraph/egglog/saturat across all sources returns zero hits. All thirty-six
+shipped rows carry `descriptor_version = 'fallback-v1'`, meaning no quandle was
+ever computed.
+
+*And the mathematics does not match, which is decisive.* Quandle invariants are
+invariants of a fixed combinatorial diagram modulo isotopy. Every move this
+layer must quotient by — rule permutation, rewiring, paraphrase, unrolling,
+interleaving — CHANGES the abstract graph; unrolling adds vertices, which no
+isotopy can do. Worse, paraphrase changes labels, and topological invariants are
+blind to labels: a quandle fingerprint therefore cannot see the doubling
+attack's defining feature, and would return FALSE POSITIVES by equating
+genuinely independent derivations that happen to share a shape.
+
+One thing there is worth borrowing, and it is not the engine: KRL ships a
+four-level confidence lattice (`ConfExact`/`ConfSufficient`/`ConfNecessary`/
+`ConfHeuristic`, `server/krl/Ast.jl:68-73`) whose necessary/sufficient split
+mirrors this layer's obstruction/equivalence duality.
+
+[#substrate]
+== Existing formal work: what can and cannot be reused
+
+Surveyed 2026-08-05 across `_TYPES _SET` and `_PROVER-SOLVER _SET`, with proofs
+independently typechecked rather than taken on trust.
+
+*Layer 1 — nothing, in any repository.* There is no syntax of claims, premises,
+steps or evidence anywhere, and no ordering on evidence events of any kind. All
+three sub-layers must be built from scratch. Two names promise otherwise and do
+not deliver: `choreographic-types` is a pre-registration stub whose
+`git log --all --diff-filter=A` returns no source file in any language on any
+branch, ever; and typell's "Level 9 Temporal safety" passes iff a named field is
+present, examining no event and no order.
+
+*Layer 2 — two real, verified contributions.* `tropical-types` derives the whole
+retention order (reflexivity, transitivity, antisymmetry, monotonicity in both
+operations) from one line of idempotence with no case split on the carrier
+(`Resource/Algebra/Dioid.lean:36-99`), and makes absorption of deceptive
+elements a semiring law every instance must discharge rather than a stipulation
+(`Interface.lean:78-80`). `#print axioms` on its load-bearing theorems reports
+none, and its CI greps a 23-theorem axiom audit and exits 1 — a real gate.
+Separately, `echo-types` proves that path-independence of grade degradation
+holds *precisely* if the retention order is propositional, and supplies a
+countermodel refuting it otherwise (`EchoGraded.agda:145-171`,
+`EchoSeparating.agda:131-141`). That is a mechanised necessary condition on this
+architecture's six-coordinate `Grade`, and checking it is an audit, not a build.
+
+*This layer — a quarter, on the obstruction side only.* `echo-types` supplies a
+compiling home for the object this layer's question ranges over: `Echo f y = Σ A
+(λ x → f x ≡ y)` (`Echo.agda:16-17`), the fibre of a lossy map — "which distinct
+inputs collapsed to the same output". `echo-not-prop` (`EchoTruncation.agda:76-82`)
+is a general "here is an invariant separating two members of one fibre", and
+`FiberSize-fin` mechanises "identified members count once" — the counting half
+of the sortal, exactly. But there is *nothing* on the equivalence-certificate
+side: no move relation, no quotient, no normal form, no confluence result, in
+any repository surveyed. And the piece most needed is the repo's own unclosed
+debt — propositional truncation is postulated under `--safe`
+(`EchoImageFactorizationPropPostulated.agda:108`) and constructed only in a
+`--cubical` island that Agda's flag rules forbid the main cone from importing.
+"Merely inhabited versus how many witnesses" is precisely what the doubling
+attack turns on.
+
+=== absolute-zero's CNO: refuted as a substrate, valuable as a case study
+
+The hypothesis was attractive: an equivalence certificate is a move sequence
+non-null on the presentation but provably null on the claim, i.e. a Certified
+Null Operation on semantic content, and `CNOCategory.v` would supply the
+category. It does not survive, and the refutation is machine-checked against the
+repository's own Coq.
+
+`is_CNO` is nullity against one hard-coded projection that deliberately excludes
+the program counter (`CNO.v:63-71`), from which follows the axiom-free
+`any_jump_is_cno`: an unconditional jump to an arbitrary target is a CNO,
+because under that projection control flow does not exist. Every move this layer
+must adjudicate is a control-flow move. Worse, the exclusion is documented as
+having been made *because* requiring PC-equality made "every non-empty CNO claim
+FALSE" — the widen-the-invariant-until-your-moves-are-null circularity, executed
+in the file proposed as the substrate. And `CNOCategory.v` is a category of
+machine states whose hom-sets are *not* quotiented by any semantic equivalence,
+which is the opposite of the construction needed.
+
+What genuinely survives is a negative case study, and it is worth an afternoon
+before this layer's first definition is written: `CNO.v:646-658` records two
+axioms deleted as unsound because the quotient and the move relation disagreed —
+congruence must be proved, never assumed; and `LandauerDerivation.v:330-343`
+records an attempt to reason modulo a quotient that failed and became an axiom,
+naming the missing ingredients exactly. `CNO.v:576-589` draws the right
+conclusion from Rice's theorem — be a checker, not a searcher.
+
+[WARNING]
+.Do not take a dependency on absolute-zero's Lean development
+====
+`proofs/lean4/FilesystemCNO.lean` and `proofs/lean4/LambdaCNO.lean` each derive
+`False` from their own axioms: `mkdir_rmdir_inverse` (`:98`) is stated without
+the precondition its Coq counterpart carries, and `eta_equivalence` (`:264`) is
+refuted by absolute-zero's own `LambdaCNO.v:430`. `lake build` reports success,
+and CI never runs the Lean leg at all. Reported for that repository to fix; noted
+here so no one imports it.
+====
+
+=== A tooling ruling that follows
+
+Mechanise this layer in *Agda with `--cubical`*, not Idris 2. Its core
+construction is a quotient by admissible moves, and kategoria's
+`Level10_CubicalTypes.idr:191-199` argues correctly that Idris 2's QTT cannot
+host path types, transport, higher inductive types or quotients. This is the one
+useful thing that survey produced from kategoria.
+
+[#numbering]
+=== Never write bare "L1", "L2", "L3"
+
+Three L-numberings are live in adjacent repositories and the near-misses are
+worse than the collisions: kategoria's L1–L10 is a language-feature ladder,
+typell/VCL's L1–L10 is a database-query safety scale, and this architecture's is
+type/trope/sortal. Both neighbours put temporality at *L9* while this
+architecture puts it at *Layer 1c*; kategoria's L7 is linear/affine (this
+architecture's Layer 2 concern) and its L10 is type-identity (reads as this
+layer). A cross-claim has already been made in error on number adjacency alone
+(`routes/delta-aggregate/TYPELL-BRIDGE.adoc:33-56`). Write `Layer 1 (type)`,
+`Layer 2 (trope)`, `Layer 3 (sortal)`; prefix foreign references `kat-L7`,
+`ty-L9`.
 
 == Consequences
 
@@ -479,27 +677,6 @@ design superseding the grade algebra, an informal gloss of it, or drift. If new,
 they need reconciling against `Grade` and the nine effects before either
 vocabulary is cited as canonical.
 
-[#naming]
-=== "Knot" is already taken, by a repository doing this exact job
-
-The words knot, unknot, and tangle are in use in their literal mathematical
-senses elsewhere in the estate: `quandledb` hosts KRL, the *Knot Resolution
-Language* (`0-AI-MANIFEST.a2ml:82`), and 007 proves a knot composition monoid
-with a genuine `unknot` identity element
-(`proofs/canonical-proof-suite/M10_knot_composition_monoid.v:30-34`). Reusing
-them for real-versus-false tangles will collide.
-
-The collision is more interesting than a naming clash. QuandleDB describes
-itself as "the invariant/equivalence + semantic-identity face (quandle
-fingerprints, equivalence/identity)" — which is, in a different domain, the
-charter this record assigns to Layer 3. Whether that is a coincidence of
-vocabulary or a reusable substrate is worth establishing before either is built
-out further.
-
-*What would settle it:* a decision on the layer's formal name, and a probe of
-whether QuandleDB's equivalence/identity API can carry argument presentations as
-well as knot diagrams.
-
 === Not settled here
 
 * *Who owns the total-evidence requirement.* Affinity makes weakening free:
@@ -519,7 +696,7 @@ well as knot diagrams.
   same Layer 1 form.
 * Whether the correctness criterion remains tractable. Multiplicative proof-net
   correctness is linear-time without units, but proof *equivalence* with units
-  is PSPACE-complete (Heijltjes–Houston 2014). The equivalence layer asks the
+  is PSPACE-complete (Heijltjes–Houston 2014). The sortal layer asks the
   second question, not the first.
 * Whether Milnor invariants suffice as obstruction certificates. They classify
   Brunnian links up to link-homotopy, but boundary links have all Milnor
