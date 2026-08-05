@@ -8,10 +8,80 @@ SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 src="https://api.thegreenwebfoundation.org/greencheckimage/github.com"
 data-link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com" />
 
-Invariant Path is a repo-native semantic overlay MVP for tracing how
-claims move from source evidence/specification to target conclusions.
+# Invariant Path
 
-It is a claim-path debugger, not a truth engine.
+**Invariant Path traces what a claim *means* when it crosses from one domain
+into another — and finds the crossings where the meaning quietly changed.**
+
+It is a claim-path debugger, not a truth engine. It does not decide whether a
+claim is true. It shows you the path a claim took, and where along that path it
+stopped meaning what it meant at the start.
+
+## The idea
+
+A claim is asserted in some domain. It is then re-expressed in another — a
+specification lowered into code, a licence text asserting facts about its own
+file tree, a source language emitted through several backends, a proof
+obligation discharged in a different logic.
+
+Two things can be true at once:
+
+* the claim holds on **both** sides of the transition, and
+* it does **not mean the same thing** on both sides.
+
+That second case is the one this tool exists for. Nothing on the surface
+signals it: both sides pass their own checks, both look green, and the
+divergence is invisible precisely because each side is internally consistent.
+The invariant is not "the claim is true here and true there" — it is
+**"the claim is the *same claim* here and there."** That is the path, and the
+path is what has to be invariant.
+
+### The failure is silent, which is why it needs tooling
+
+Per-domain tests are the wrong instrument by construction. A test inside domain
+A checks A against itself; a test inside domain B checks B against itself.
+Neither can see that A's claim and B's claim have drifted apart, because
+**cross-domain equality is not expressible from inside either domain.** Every
+individual test can pass forever while the thing you actually care about is
+already broken.
+
+### The worked example: "different faces, same cube"
+
+AffineScript presents several *faces* — surface syntaxes — that all lower to
+one canonical form. Per-face snapshot tests catch drift *within* a face and
+never compare face A's cube against face B's. **The cross-face equality is the
+load-bearing claim**, and no per-face test can state it.
+
+Invariant Path grounds that claim: every face's `preview-*` lowering must
+normalise to the same canonical text, and when one breaks, the profile locates
+*which* face broke it.
+
+## Its dual: 007 and hermeneutic semantics
+
+Invariant Path and the hermeneutic-semantics work in `007` are two halves of one
+concern, and each is the other's mirror:
+
+| | Syntax | Semantics | The silent failure |
+|---|---|---|---|
+| **Invariant Path** | **different** | must be **the same** | forms diverge in meaning while each stays self-consistent |
+| **007 / hermeneutic** | **the same** | may be **read differently** | one form silently carries two readings, and the wrong one is assumed |
+
+*Many forms, one meaning* against *one form, many meanings*. Both fail the same
+way — silently, because the surface text carries no signal of the divergence.
+If you are working on one, read the other; a fix in either that ignores the
+dual will be incomplete.
+
+## What a profile is
+
+A **profile** is a lens this tool applies to a corpus that lives **somewhere
+else**. It names a target corpus by path, states the claim being traced, and
+supplies whatever verifier grounds it.
+
+**A profile does not vendor the corpus it examines.** See `profiles/pmpl.md`
+for the intended shape: it points at the palimpsest-license tree and copies
+nothing. A profile that carries a copy of its target will drift from the real
+thing and quietly start grounding a claim about a stale fixture — which is this
+tool's own failure mode, turned inward.
 
 # Workspace Layout
 
@@ -29,11 +99,14 @@ It is a claim-path debugger, not a truth engine.
 - `docs/EXTENDING.md` — extension guide for invariant types and
   heuristics
 
-- `examples/` — seeded and realistic examples (incl.
-  `examples/same-cube/` — the AffineScript faces corpus)
+- `examples/` — seeded examples. NOTE: `examples/same-cube/` currently
+  vendors an AffineScript corpus, which contradicts the profile rule
+  above; see the open issue to point it at the real tree instead.
 
 - `profiles/` — profile notes for `echidna`, `panll`, `hypatia`, `pmpl`,
-  and `faces` (AffineScript "different faces, same cube")
+  `standards-docs`, and `faces` (AffineScript "different faces, same
+  cube" — pending rename to `affinescript`, matching the others, which
+  are named for their target corpus rather than for one claim inside it)
 
 - `scripts/verify-same-cube.sh` — grounds the faces same-cube invariant
   (see `profiles/faces.md`)
