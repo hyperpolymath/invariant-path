@@ -15,7 +15,7 @@ the proof item — see [P1](#p1).
 | | Dimension | Open | Worst |
 |---|---|---|---|
 | A | Architecture — the three layers | 3 | **HIGH** |
-| C | CI/CD | 2 | **CRITICAL** |
+| C | CI/CD | 3 | MEDIUM |
 | L | Licence | 3 | MEDIUM |
 | D | Docs | 3 | MEDIUM |
 | P | Proof | 2 | MEDIUM |
@@ -95,41 +95,57 @@ design superseding the grade algebra, an informal gloss of it, or drift.
 
 ## CI/CD debt
 
-### C1 — Every workflow fails to start; `main` has never been green. `CRITICAL`
+### C1 — The lockfile epidemic is CURED. `RESOLVED 2026-08-05`
 
-There is **no `.github/actions-lock.json`**, and this repository is subject to
-estate-wide Actions lockfile enforcement. Every run terminates as
-`startup_failure` before a single step executes.
+Until 2026-08-05 there was no Actions lockfile, and **every** workflow
+terminated as `startup_failure` before a single step ran, on every branch.
+`main` had never been green, which made every other gate decorative.
 
-Measured 2026-08-05 across all branches:
+Fixed by PR #56, which adopted `.github/workflows/actions.lock`. Re-measured on
+`main` the same day — latest run per workflow:
 
 ```
-main                        6/6 startup_failure
-docs/state-the-idea         6/6 startup_failure
-docs/adr-equivalence-layer  6/6 startup_failure
+GREEN (10)  Code Quality · CodeQL Security Analysis · Governance ·
+            Guix/Nix Package Policy · Hypatia Security Scan ·
+            RSR Anti-Pattern Check · Runtime Policy · Rust CI ·
+            Secret Scanner · Security Policy
 ```
 
-Seventeen workflow files exist. None has ever run to completion.
+The gates are now real: Rust CI, CodeQL and Secret Scanner actually execute and
+can actually fail. Three residual items remain, tracked below.
 
-This is the most consequential item in the register, because it makes every
-other gate decorative: CodeQL, secret-scanner, governance and Rust-CI cannot
-fail, since they cannot start.
+> **Diagnosis trap, retained because it will recur.** `gh pr checks` shows
+> *nothing wrong* for a parse-rejected workflow — it emits no check run at all,
+> so a PR looks unchecked rather than broken. Use `gh run list --branch <b>`;
+> a `?status=failure` query also **excludes** `startup_failure`.
 
-> **Diagnosis trap.** `gh pr checks` shows *nothing wrong* — a parse-rejected
-> workflow produces no check run at all, so a PR looks unchecked rather than
-> broken. Use `gh run list --branch <b>`; a `?status=failure` query also
-> **excludes** `startup_failure`.
+### C2 — OSSF Scorecard still fails to start. `MEDIUM`
 
-**Fix:** add `.github/actions-lock.json`, hand-author the reusable-caller
-entries (the lock generator skips callers), and re-pin. The chain is proven
-elsewhere in the estate.
+The one workflow the lockfile fix did not reach: `OSSF Scorecard` is still
+`startup_failure` on `main`, so it has never produced a result. PR #59 proposes
+making it periodic rather than per-push, which may or may not address the
+startup cause — the two are independent.
 
-**Closed when:** `gh run list --branch main` shows zero `startup_failure`.
+**Closed when:** Scorecard produces a conclusion other than `startup_failure`.
 
-### C2 — No proof gate. `MEDIUM`
+### C3 — Two workflows fail on content. `MEDIUM`
+
+Genuine failures, not startup problems — which means they are now doing their
+job and reporting something real:
+
+- `Well-Known Standards (RFC 9116 + RSR)`
+- `Workflow Security Linter`
+
+Both were invisible until the lockfile landed, because neither could start.
+Neither has been triaged.
+
+**Closed when:** each either passes or has its finding recorded here as
+accepted.
+
+### C4 — No proof gate. `MEDIUM`
 
 No workflow invokes Agda, and none runs `scripts/verify-same-cube.sh`. The CI
-half of [P1](#p1) and [P2](#p2).
+half of [P1](#p1) and [P2](#p2). Unaffected by the lockfile fix.
 
 **Closed when:** a workflow compiles `proofs/SameCube.agda` and runs the
 verifier, and both can fail the build.
@@ -254,8 +270,9 @@ roughly fifteen term lists and their pairwise interactions, a larger surface
 than twenty-one tests can pin. Property tests exist (Phase A shipped proptest)
 but the loss-tag matrix is not systematically covered.
 
-Explicitly **not** worth addressing before [C1](#c1--every-workflow-fails-to-start-main-has-never-been-green-critical)
-— tests that cannot run in CI buy nothing.
+Now genuinely worth doing: until 2026-08-05 no test could run in CI at all, so
+coverage work bought nothing. Rust CI is green as of [C1](#cicd-debt), so it
+does.
 
 ---
 

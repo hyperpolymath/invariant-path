@@ -178,11 +178,14 @@
 
   (debt
     (register "docs/DEBT.md" "live; supersedes docs/tech-debt-2026-05-26.md")
-    (critical "CI/CD: no .github/actions-lock.json — ALL workflows are
-               startup_failure on EVERY branch; main has never been green. Every
-               other gate is therefore decorative. NOTE: `gh pr checks` shows
-               nothing wrong, because a parse-rejected workflow emits no check
-               run; use `gh run list --branch <b>`.")
+    (resolved "CI/CD: the lockfile epidemic is CURED (PR #56, 2026-08-05).
+               Until then ALL workflows were startup_failure on EVERY branch and
+               main had never been green. Now 10 green on main including Rust CI,
+               CodeQL and Secret Scanner — the gates are real. Residual: OSSF
+               Scorecard still startup_failure; Well-Known Standards and Workflow
+               Security Linter fail on content, untriaged. NOTE, because it will
+               recur: `gh pr checks` shows nothing wrong for a parse-rejected
+               workflow, since it emits no check run; use `gh run list`.")
     (high "Architecture: layer 1 has no substrate; layer 3's equivalence side
            (move relation, quotient, normal form) does not exist anywhere.")
     (medium "Layer 2 VOCABULARY MISMATCH: of strength/consistency/coherence/
