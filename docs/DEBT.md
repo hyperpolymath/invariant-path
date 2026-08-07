@@ -16,7 +16,7 @@ the proof item — see [P1](#p1).
 |---|---|---|---|
 | A | Architecture — the three layers | 3 | **HIGH** |
 | C | CI/CD | 3 | MEDIUM |
-| L | Licence | 3 | MEDIUM |
+| L | Licence | 2 | MEDIUM |
 | D | Docs | 3 | MEDIUM |
 | P | Proof | 2 | MEDIUM |
 | K | Code | 1 | LOW |
@@ -128,6 +128,13 @@ startup cause — the two are independent.
 
 **Closed when:** Scorecard produces a conclusion other than `startup_failure`.
 
+> PR #59 proposes dropping Scorecard's `push` trigger so it runs on a schedule
+> only. That is right on signal-discipline grounds — Scorecard measures the
+> *repository's* posture, not the change under review — but it does **not** fix
+> this finding: a scheduled run will still fail to start for whatever the
+> underlying cause is. It changes when the failure is visible, not whether it
+> happens.
+
 ### C3 — Two workflows fail on content. `MEDIUM`
 
 Genuine failures, not startup problems — which means they are now doing their
@@ -154,7 +161,7 @@ verifier, and both can fail the build.
 
 ## Licence debt
 
-### L1 — GitHub reports **no licence** for this repository. `MEDIUM`
+### L1 — GitHub reported **no licence** for this repository. `RESOLVED`
 
 `gh repo view --json licenseInfo` returns `null`, despite a 373-line MPL-2.0
 `LICENSE` at the root and `license = "MPL-2.0"` in `Cargo.toml`. The repository
@@ -164,10 +171,18 @@ Cause: `LICENSE` deviates from canonical MPL-2.0 in two places — a **trailing
 space** at line 38, and `http://` rather than `https://` at line 360.
 `LICENSES/MPL-2.0.txt` is the clean copy.
 
-Fixed in this change by replacing `LICENSE` with the canonical text; detection
-is recomputed on push, so the API result must be re-checked after merge.
+**RESOLVED 2026-08-05.** `LICENSE` was replaced with the canonical text and the
+change merged to `main`; detection recomputed and now reports:
 
-**Closed when:** `gh repo view --json licenseInfo` reports `MPL-2.0`.
+```
+$ gh api repos/hyperpolymath/invariant-path/license --jq '{name:.license.spdx_id, path:.path}'
+{"name":"MPL-2.0","path":"LICENSE"}
+```
+
+Note for anyone re-testing this: detection **lags the push**. An immediate
+`gh repo view --json licenseInfo` still returned `null` and only cleared after
+a pause — long enough to look like the fix had failed. Re-check before
+concluding.
 
 ### L2 — SPDX headers are not on line 1. `MEDIUM`
 
