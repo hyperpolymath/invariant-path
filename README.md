@@ -52,9 +52,40 @@ one canonical form. Per-face snapshot tests catch drift *within* a face and
 never compare face A's cube against face B's. **The cross-face equality is the
 load-bearing claim**, and no per-face test can state it.
 
-Invariant Path grounds that claim: every face's `preview-*` lowering must
-normalise to the same canonical text, and when one breaks, the profile locates
-*which* face broke it.
+Invariant Path grounds that claim: each face is compiled to typed-wasm and the
+modules are compared by `sha256`, so the faces must land in **one wasm
+equivalence class**. The wasm *is* the cube, which makes this a far stronger
+bar than matching canonical text. When a face falls outside the class, a
+normalised text diff is printed to locate *where* — as a diagnostic, not as the
+check itself.
+
+This is one worked example, not the subject of the repository. See
+`profiles/faces.md` for its limits, including the two classes the `greet`
+corpus genuinely splits into.
+
+## The three-layer claim checker
+
+Invariant Path is the **governance front-end** for a layered checker. Each
+layer answers a question the others cannot:
+
+| Layer | Name | Question |
+|---|---|---|
+| 1 | **type** | Is this admissible *on form alone*? Well-formedness, through-line, and a forward-only ordering on evidence — "the diode". |
+| 2 | **trope** | Does this particular evidence survive the leap to this conclusion *for this use*? Purpose-indexed warrant. |
+| 3 | **sortal** | Are these two presentations *the same argument*? Identity, and therefore counting. |
+
+Layer 3 was ruled on in
+[ADR-0001](docs/decisions/0001-the-sortal-layer.adoc) after a five-count case
+against it was built deliberately and three of the five counts broke. Its
+killer case is the **doubling attack**: one derivation presented twice,
+paraphrased, under distinct labels is invisible to every Layer 1 and Layer 2
+check — identical pass/fail on every subdiagram — while corroboration weight is
+two instead of one. That is why Layer 3 runs *before* Layer 2: identity must be
+settled before resource accounting, or Layer 2 double-counts.
+
+**These layers are decided, not built.** The ADR is a decision record. What
+ships today is the extractor, classifier and annotation store described below.
+Open architectural gaps are tracked in [`docs/DEBT.md`](docs/DEBT.md).
 
 ## Its dual: 007 and hermeneutic semantics
 
