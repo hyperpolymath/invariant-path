@@ -14,22 +14,192 @@
     (status "starred"))
 
   (milestones
-    (phase-a "COMPLETE" "2026-04-15" "Multi-root grounding, proptest, and benchmarks"))
+    (phase-a "COMPLETE" "2026-04-15" "Multi-root grounding, proptest, and benchmarks")
+    (adr-0001 "ACCEPTED" "2026-08-05" "Layer 3 ruled: the SORTAL layer; 3 of 5 counts against it broke"))
+
+  ;; ==========================================================================
+  ;; CORE IDEA — CANONICAL STATEMENT
+  ;;
+  ;; READ THIS BEFORE WRITING ANYTHING ABOUT THIS REPOSITORY.
+  ;;
+  ;; This statement has been re-derived from the code by successive agents and
+  ;; distorted each time — each restatement plausible, each drifting further
+  ;; from the idea. Treat the text below as the definition, not as one
+  ;; description among several.
+  ;;
+  ;; DO NOT paraphrase it in commits, PRs, docs, issues or manifests.
+  ;; QUOTE it, or link to it. If you believe it is wrong, say so explicitly
+  ;; and argue the point — do not silently improve the wording.
+  ;; ==========================================================================
+  (core-idea
+    (statement
+      "A claim can hold on BOTH sides of a domain transition and still NOT MEAN
+       THE SAME THING on both sides. The invariant is not 'true here and true
+       there' — it is 'the SAME CLAIM here and there'. That path is what must
+       be invariant.")
+
+    (why-tooling-is-required
+      "The failure is silent BY CONSTRUCTION: cross-domain equality is not
+       expressible from inside either domain. A test in domain A checks A
+       against itself; a test in B checks B against itself. Every per-domain
+       test can pass forever while the load-bearing claim is already broken —
+       and everything looks green, because each side really is internally
+       consistent.")
+
+    (worked-example
+      "AffineScript presents several FACES — surface syntaxes — that all lower
+       to one canonical form. Per-face snapshot tests catch drift WITHIN a face
+       and can never compare face A's cube against face B's. The cross-face
+       equality is the load-bearing claim, and no per-face test can express
+       it. 'Different faces, same cube.'")
+
+    (what-this-is-not
+      "Not a truth engine. It does not decide whether a claim is true. It shows
+       the path a claim took and where along that path it stopped meaning what
+       it meant at the start.")
+
+    (dual "007"
+      "007's hermeneutic semantics is the MIRROR of this repo, and the two are
+       halves of one concern:
+         invariant-path : DIFFERENT syntax, must be the SAME semantics
+                          (forms diverge in meaning, each self-consistent)
+         007            : the SAME syntax, may be READ DIFFERENTLY
+                          (one form carries two readings; the wrong one is assumed)
+       Many forms/one meaning, against one form/many meanings. Both fail
+       SILENTLY, because the surface text carries no signal of the divergence.
+       Work on either one without reading the other and the fix is incomplete.")
+
+    (profile-rule
+      "A PROFILE is a lens onto a corpus that lives ELSEWHERE. It names a target
+       corpus by path and VENDORS NOTHING — see profiles/pmpl.md, which points
+       at the palimpsest-license tree and copies no part of it. A profile
+       carrying a copy of its target drifts from the real thing and then grounds
+       a claim about a stale fixture while reporting success: this tool's own
+       failure mode, turned inward. Profiles are named for their TARGET, not for
+       one claim about it.")
+
+    (known-deviation
+      "examples/same-cube/ currently vendors an AffineScript corpus and the
+       profile is named 'faces' rather than 'affinescript' — both violate
+       profile-rule above. Tracked as issue #54; not silently corrected."))
 
   (purpose
     "Monorepo for Invariant Path heuristic extraction and classification.
-     Provides a shared CLI for multiple estate components (echidna, panll, hypatia).")
+     Provides a shared CLI for multiple estate components (echidna, panll,
+     hypatia). NOTE: this describes the PLUMBING. For what the repository is
+     FOR, see core-idea above — reading only this line is how the idea has
+     previously been lost.")
 
   (canonical-locations
     (ai-manifest     "0-AI-MANIFEST.a2ml"           "THIS FILE")
-    (launcher        "invariant-path-launcher"      "Standardized launcher"))
+    (launcher        "invariant-path-launcher"      "Standardized launcher")
+    (decisions       "docs/decisions/"              "ADRs — the layer rulings")
+    (architecture    "ARCHITECTURE.md"              "How the work is arranged")
+    (debt            "docs/DEBT.md"                 "Live debt register"))
 
   (structure
     "invariant-path/
-     ├── crates/                    # Rust crates (CLI, core logic)
-     ├── profiles/                  # Scan profiles for different repos
-     ├── schemas/                   # JSON schemas for annotations
-     └── scripts/                   # Management and installation scripts")
+     ├── docs/decisions/            # ADRs — the LAYER RULINGS. Start at 0001.
+     ├── crates/invariant-path-core # extractor, classifier, model, annotations
+     ├── crates/invariant-path-cli  # the binary (single main.rs)
+     ├── schemas/                   # JSON schema for persisted annotations
+     ├── profiles/                  # lenses onto corpora ELSEWHERE; vendor nothing
+     ├── proofs/                    # SameCube.agda (the faces worked example)
+     ├── examples/same-cube/        # vendored corpus — violates profile-rule, issue #54
+     ├── scripts/                   # verify-same-cube.sh, install-desktop.sh
+     ├── src/ui/                    # AffineScript GUI SKETCH — in NO build
+     └── desktop/, assets/          # launcher entry and icons")
+
+  (architecture
+    (headline
+      "Two faces. (1) The GOVERNANCE FRONT-END for a three-layer claim checker —
+       this is where the layer architecture is decided and recorded, and where
+       most of the intellectual work lives. (2) A shipping Rust CLI that extracts
+       and classifies claim transitions. The second is NOT an implementation of
+       the first; keep that distinction visible.")
+
+    (layer-1 "type"
+      "Formal admissibility, checkable on FORM ALONE. Sub-layers: well-formedness;
+       continuity/through-line; temporality = 'the diode', a forward-only ordering
+       (evidence precedes conclusion, no backward edges) applied PER CLAIM-TYPE.
+       OPEN: the diode's clock must be EPISTEMIC not ontic or retrodiction fails
+       to type-check; epistemic time across sources is a PARTIAL order, so verdicts
+       need invariance across interleavings; per-type diodes glue into differently
+       clocked charts, so a path forward in every chart can reach backwards
+       globally (composition-forgery — holonomy).")
+
+    (layer-2 "trope"
+      "Particularity and warrant, PURPOSE-INDEXED, per strand. IMPLEMENTED
+       ELSEWHERE (trope-checker + hermeneia): a six-coordinate Grade, nine p-*
+       effects (three deceptive and absorbing), a Floor as partial demand vector,
+       and a verdict Sufficient|Insufficient CARRYING A WITNESS EDGE. p-sufficiency
+       is floor(U) [= acc(v). Resource discipline is AFFINE (at most once) WITH A
+       GUARDED CONTRACTION RULE — not plain affine logic.")
+
+    (layer-3 "sortal"
+      "Adjudicates IDENTITY OF AN ARGUMENT ACROSS PRESENTATIONS, issuing an
+       EQUIVALENCE CERTIFICATE (a move sequence whose every intermediate still
+       passes layers 1 and 2) or an OBSTRUCTION CERTIFICATE (an invariant
+       separating them under the same quotient). Detection and equivalence-
+       certification are DUAL. Named for the sortal of Locke/Strawson/Wiggins/Lowe:
+       a concept supplying a CRITERION OF IDENTITY and a PRINCIPLE OF COUNTING.
+       Ruled in docs/decisions/0001-the-sortal-layer.adoc after 3 of 5 counts
+       against the layer broke under adversarial review.")
+
+    (dependency-order
+      "Layer 1 --orientations--> Layer 3 --identities--> Layer 2.
+       Layer 3 is UPSTREAM of Layer 2's soundness. Overlapping presentations must
+       be recognised as the same argument BEFORE resource accounting, or Layer 2
+       double-counts. This arrow was missing from the original design.")
+
+    (killer-case "the doubling attack"
+      "One derivation presented TWICE, paraphrased, under distinct labels.
+       Label-honest (the diode is silent), well-founded, exogenously attested,
+       each copy individually warranted — and it has an IDENTICAL pass/fail profile
+       to genuine two-witness corroboration on EVERY subdiagram, so no layer-1 or
+       layer-2 sweep can see it, while corroboration weight is 2 versus 1.
+       It is NOT an illegal contraction; it is a contraction that was MANDATORY AND
+       NEVER TAKEN, to which the affine resource algebra is structurally blind.")
+
+    (status
+      "DECIDED, NOT BUILT. Nothing in this repository implements these layers.
+       Layer 1 has NO substrate anywhere in the estate. Layer 2 has real support
+       from tropical-types and echo-types. Layer 3 has ~a quarter, obstruction
+       side only, from echo-types' fibre. QuandleDB and absolute-zero's CNO were
+       both investigated as substrates and REFUTED WITH EVIDENCE — do not reopen
+       either without new evidence. See docs/DEBT.md sections A1-A3.")
+
+    (numbering-hazard
+      "NEVER write bare L1/L2/L3. Three unrelated L1-L10 schemes are live in
+       adjacent repositories (kategoria = language-feature ladder, typell/VCL =
+       query-safety scale), and BOTH neighbours put temporality at their L9 while
+       this architecture puts it at Layer 1c. Write 'Layer 1 (type)',
+       'Layer 2 (trope)', 'Layer 3 (sortal)'; prefix foreign refs kat-L7, ty-L9."))
+
+  (debt
+    (register "docs/DEBT.md" "live; supersedes docs/tech-debt-2026-05-26.md")
+    (resolved "CI/CD: the lockfile epidemic is CURED (PR #56, 2026-08-05).
+               Until then ALL workflows were startup_failure on EVERY branch and
+               main had never been green. Now 10 green on main including Rust CI,
+               CodeQL and Secret Scanner — the gates are real. Residual: OSSF
+               Scorecard still startup_failure; Well-Known Standards and Workflow
+               Security Linter fail on content, untriaged. NOTE, because it will
+               recur: `gh pr checks` shows nothing wrong for a parse-rejected
+               workflow, since it emits no check run; use `gh run list`.")
+    (high "Architecture: layer 1 has no substrate; layer 3's equivalence side
+           (move relation, quotient, normal form) does not exist anywhere.")
+    (medium "Layer 2 VOCABULARY MISMATCH: of strength/consistency/coherence/
+             resemblance-warrant-on-merge/p-residue/p-sufficiency, only
+             p-sufficiency is real. p-residue exists in NO repository. Left
+             deliberately unreconciled; see docs/DEBT.md A3.")
+    (medium "Proof: proofs/SameCube.agda is real (--safe, zero postulates, zero
+             holes) but UNGATED — no workflow compiles it. verify-same-cube.sh
+             exits 0 on a missing compiler.")
+    (medium "Licence: GitHub reports NO licence — LICENSE deviated from canonical
+             MPL-2.0 (trailing space line 38, http vs https line 360). SPDX
+             identifiers sit on line 2-3 behind an opening comment, which the
+             estate linter (head -1 only) reads as missing. Do NOT fix by adding
+             headers — MOVE them; a blind sweep previously mis-licensed files."))
 
   (format-meta
     (version "2.1.0")

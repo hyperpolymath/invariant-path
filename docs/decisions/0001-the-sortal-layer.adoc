@@ -1,0 +1,704 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= ADR-0001: The sortal layer — what survives the case against the knot layer
+
+*Date:* 2026-08-05
+
+*Status:* Accepted
+
+== Context
+
+The claim-checking architecture under design has three layers. Layer 1, *type*:
+formal admissibility, checkable on form alone — well-formedness, continuity or
+through-line, and temporality, a forward-only ordering constraint (the *diode*)
+requiring that evidence precede conclusion, applied per claim-type. Layer 2,
+*trope*: particularity and warrant, purpose-indexed, judging whether
+individuated context-bound evidence survives the leap to the conclusion for this
+use. Layer 3, *knot*: structure — once each strand has passed Layers 1 and 2,
+distinguishing *real tangles*, interdependencies that cannot be separated
+without cutting a claim, from *false tangles* that look interlinked and slide
+apart when pulled.
+
+The stated rationale for siting temporality in Layer 1 was that Layer 3 needs
+its strand orientations from a clean form-only rule, so the topology does not
+inherit Layer 2's purpose-indexed messiness.
+
+That rationale invites an obvious attack, and the attack was commissioned
+deliberately: *does the diode, pushed into Layer 1 and applied per claim-type,
+abolish Layer 3's subject matter?* If every admissible strand is monotone in
+time, the configurations are braids rather than knots, and the case for a third
+layer looks like a case for an optimizer.
+
+A five-count prosecution was built to make that case as sharply as possible,
+then attacked by three independent adversarial reviews with a separate
+mathematical fact-check of the theorems it relied on. *Three of the five counts
+broke.* This record exists because the surviving position reverses a plausible
+one, and a reversal that is not written down where it can be found will be
+re-derived wrongly. That failure has already happened once in this repository:
+the core idea was stated correctly and only in a dated `DESIGN.md` entry
+(2026-06-18), where it was accurate and invisible.
+
+== Decision
+
+*Layer 3 is retained, and its charter is restated.* It is not a detector of
+knots in a diagram of the argument. It is the *sortal layer*: it adjudicates
+*identity of an argument across presentations*, and it issues certificates
+rather than verdicts.
+
+*The name is "sortal", ruled 2026-08-05.* A sortal — Locke, Strawson, Geach,
+Wiggins, Lowe — is a concept that supplies a *criterion of identity* and a
+*principle of counting* for its instances. That is this layer's charter twice
+over: adjudicating identity across presentations is the criterion, and the
+doubling attack, where corroboration weight is 2 or 1 according to whether two
+presentations are one argument, is the count. The name also states the layer
+ORDER, which no alternative did: you cannot account resources over instances
+until you have fixed what counts as one instance, so the sortal must be settled
+before Layer 2's accounting is sound (see <<arrow>>).
+
+It was chosen over nine alternatives on four weighted criteria — accuracy,
+collision-freedom, peer fit with "type" and "trope", and honesty about the
+mathematics. Runner-up was *congruence* (an equivalence relation compatible with
+the structure — technically sharper, but already live inside Layer 2's own
+soundness proofs). The former working title, *the equivalence layer*, came
+LAST: it escapes the metaphor collision only to land in a charter collision,
+since quandledb self-describes as the "invariant/equivalence + semantic-identity"
+layer and Tangle ships a "storage/equivalence layer". See <<naming>>.
+
+"Knot layer" is retired, not retained. The two certificate names below are
+unaffected and keep their existing terms.
+
+== The prosecution, and which counts fell
+
+[cols="1,3,1",options="header"]
+|===
+| Count | Charge | Verdict
+
+| 1
+| *Jurisdictional suicide.* The diode makes every strand monotone in time. Cups
+  and caps — local extrema of the time function, the generators of genuine
+  knotting — are exactly time-reversal points, banned by Layer 1. Braid closure
+  requires identifying a strand end with an earlier strand start, which the DAG
+  discipline forbids. With endpoints unpinned, braids comb out flat. The rule
+  Layer 3 demanded abolishes Layer 3's subject matter.
+| *Falls*
+
+| 2
+| *The second dimension is notation.* A crossing lives in the drawing, not the
+  argument. Isotopy invariance, applied honestly, quotients the drawing away,
+  and the quotient is just the DAG with its incidence and resource structure.
+| *Falls*
+
+| 3
+| *Proof-theoretic absorption.* The genuine structural content is substructural
+  proof theory, already owned by Layers 1 and 2; the one global condition, a
+  proof-net correctness criterion, is form-only and cheap and belongs in Layer
+  1's continuity sub-layer.
+| *Survives only in a fragment*
+
+| 4
+| *Supervenience dilemma.* Either tangledness cashes out in Layer 1/2 verdicts
+  over partitions — hence is definable, merely expensive — or it does not, in
+  which case nothing epistemic hangs on it and it is notation.
+| *Survives only in a fragment*
+
+| 5
+| *Residual identity.* The only unannexed content is a fast-certificate
+  calculus standing in for a complete-but-exponential sweep. That is complexity
+  management: a job description, not a subject matter.
+| *Falls*
+|===
+
+=== Why Count 1 falls
+
+The mechanism was checked and is wrong. The diode constrains *edges*: each edge
+is strictly monotone in epistemic time. It cannot constrain the Morse structure
+at *vertices*, and Layer 2 mandates vertices — merging two strands under a
+resemblance warrant, splitting shared evidence across two uses.
+
+Walk any undirected cycle in the DAG. A merge vertex, where both cycle edges
+enter, is a local *maximum* of time along that cycle; a split vertex, where both
+leave, is a local *minimum*. So a confluence diamond — one evidence node split
+into two lemma strands that merge into one conclusion — is a closed curve with
+exactly one minimum, one maximum, and monotone arcs between: the Morse profile
+of a round circle. Two such diamonds embed with linking number 1, every edge
+strictly forward in time, no closure operation and no time-reversal anywhere. A
+cycle alternating two splits and two merges carries four extrema, enough for a
+trefoil in 2-bridge position.
+
+The supporting lemmas were individually correct — a critical-point-free strand
+does straighten; unpinned strand systems do comb flat; the braid word problem is
+polynomial by Garside normal form. The false premise was *unpinned*. Endpoints
+are identified, not free: multiple strands leave the same observation token and
+enter the same conclusion node, and identification is asserted content. Artin
+combing requires a free boundary. Pinning is precisely what makes braid
+non-triviality possible.
+
+Layer 1's diode and Layer 2's merge rule do not abolish Layer 3's subject
+matter. They jointly manufacture it.
+
+=== Why Count 2 falls
+
+The count offers a dichotomy — structure is either in the drawing, hence
+notation, or in the DAG's incidence and resource data, hence already owned.
+Intrinsic linking is neither. Conway–Gordon (1983): in *every* embedding of
+K6 in 3-space the sum of linking numbers over disjoint triangle pairs is odd, so
+some pair is non-trivially linked; every embedding of K7 contains a knotted
+Hamiltonian cycle. The property is fixed by the abstract graph, yet what it
+asserts quantifies over all realizations: however you present this dependency
+structure, some pair of its confluence cycles interpenetrates. That is
+drawing-invariant and epistemically contentful, and no Layer 1 predicate —
+well-formedness, continuity, diode — quantifies over embeddings.
+
+Robertson–Seymour–Thomas cuts both ways and the concession is recorded: linkless
+embeddability is characterised by excluding the seven-graph Petersen family as
+minors, so *detection* is polynomial and annexable to Layer 1. The count loses
+the philosophical point and keeps the organizational one. Note in passing that
+the Petersen family is closed under Δ-Y exchange, and the Y is a trivalent
+vertex: the obstruction family is generated by the same merge vertices Layer 2
+introduces.
+
+=== Why Count 5 falls: the doubling attack
+
+Present one internally-derived line of evidence *twice*, paraphrased, under
+distinct labels — two apparently independent corroborating lines for a
+conclusion that are in fact one derivation with its rule order permuted and its
+intermediate claims re-worded.
+
+Every node is label-honest: each timestamp truly records when that presentation
+was committed, so the diode is silent. Every grounding chain terminates in
+genuinely attested exogenous anchors, so attestation and well-foundedness both
+pass — what is doubled is the internal derivation *over* honest anchors. Each
+line individually passes Layer 2. No resemblance-warrant fires, because a
+label-keyed ledger sees two tokens and never registers a contraction.
+
+Now apply Count 4's own supervenience test. The doubled web and an honestly
+redundant two-witness web have *identical* pass/fail profiles over *every*
+subdiagram: delete either line and the other passes, in both webs. The
+complete-but-exponential sweep cannot distinguish them even in principle,
+because its supervenience base is Boolean and the two webs agree on every
+Boolean. Yet corroboration weight is two versus one.
+
+So there is a judgement that is epistemically load-bearing, provably not
+supervenient on Layer 1/2 runs, not attestation, not well-foundedness, and not
+complexity management — it is a different *relation*, not a faster decision
+procedure for the sweep's relation.
+
+Worse for Count 5, this inverts its mechanism. The sweep's counterfactuals
+quantify over strands, which presupposes knowing where one strand ends and
+another begins. Under the doubling attack the sweep answers *its own* questions
+wrongly: asked which claim, if cut, collapses the web, it reports the conclusion
+robust — cut line one, line two survives — when in truth a single cut collapses
+everything. Load-bearing and robustness analysis are not further applications
+the sweep owns; they are computations the sweep gets *wrong* unless the identity
+quotient is supplied to it as input. A component that the complete procedure
+depends on for its own correctness is not an optimizer over that procedure.
+
+== The fragment where the prosecution is right
+
+This bound is part of the finding, not a hedge. Assume a single global epistemic
+clock, a fixed and finite purpose index, strand monotonicity, and support-only
+warrant with no defeaters. In that fragment:
+
+* literal knot theory has no subject matter — no closures, no static knot types,
+  and crossings as drawn are notation;
+* the deletion-and-partition sweep genuinely annexes static detection. An
+  attempt to construct two structures with identical Layer 1/2 verdicts on every
+  subdiagram *including* deletion counterfactuals but differing tangle-hood
+  failed inside this fragment: deletion sweeps see pooling, Brunnian arity, and
+  blast radius.
+
+Everything below turns on the architecture not living in that fragment.
+
+== The three results that survive
+
+=== Separability is reachability, not a verdict profile
+
+Two tokens, affine — *at most* one use each — pooled by a warranted merge that
+supports two claims, each above its sufficiency floor. The sweep tests the partition
+"first token to first claim, second to second": both parts pass in isolation, so
+the formula returns *false tangle*.
+
+Now try to pull it apart as moves on the committed state. The token cannot be
+pre-attached to its claim, because its residue is already consumed inside the
+merge — the affine accounting forbids the staging duplicate. The merge cannot be
+detached first, because that leaves a claim momentarily unsupported, which is a
+cut. The merge cannot be split in place without dangling edges, a Layer 1
+violation. And an atomic multi-edge transaction is unavailable, because on an
+append-only ledger an atomic swap is indistinguishable from a retroactive
+rewrite — precisely the forgery the ledger exists to expose.
+
+Every route passes through a cut. By the operative definition — inseparable
+*without cutting a claim*; false tangles *slide apart when pulled* — this is a
+real tangle. The sweep says false. The extensional formula therefore yields the
+wrong extension.
+
+Realness is a *reachability* property of the space of Layer-1/2-passing states
+under the legal moves, with strand endpoints pinned by resource identity.
+Path-connectivity is never a function of pointwise vertex properties, so no
+quantified formula over static verdicts on subdiagrams computes it.
+
+[#discipline]
+==== Which resource discipline, exactly
+
+*Affine — at most once — not linear.* Linear would require every token to be
+consumed exactly once, so an uncited piece of evidence sitting in the store
+would be a type error. That is the wrong norm for an evidence store: weakening
+must be free.
+
+The argument above is indifferent to the choice. What it leans on is the
+*absence of contraction* — a token cannot be duplicated to stage the separation
+— and linear and affine both forbid that. They differ only over weakening, which
+the argument never uses. So the reachability result holds under either reading;
+only the gloss was overstated.
+
+But neither label is exactly right, and the gap is load-bearing. This
+architecture does not forbid contraction outright: *resemblance-warrant-on-merge*
+permits it *when warranted*. The discipline is therefore affine with a guarded
+contraction rule — contraction available only against a warrant — which is not
+plain affine logic but a controlled-contraction variant of it.
+
+That distinction is exactly where the doubling attack lives. Two failure modes
+double-count evidence, and affinity sees only one of them:
+
+* *Contraction taken freely* — one token duplicated and spent twice. Banned by
+  affinity, caught by the ledger.
+* *Contraction never taken though mandatory* — two tokens that are one token,
+  never merged, so corroboration is counted twice. **Affinity is blind to this**,
+  because nothing illegal happens: two distinct labels really are spent once
+  each.
+
+The doubling attack is the second. It is not an illegal contraction; it is a
+*missing* one. This sharpens the dependency argument below: Layer 3 is not
+merely an input to Layer 2's accounting, it closes a specific and permanent
+blind spot in it. No resource discipline can detect a contraction it was never
+asked to perform, because the omission is invisible in the resource algebra —
+it is a fact about identity, which lives outside that algebra.
+
+=== The purpose quantifier is beyond any finite sweep
+
+Layer 2 verdicts are purpose-indexed, so tangle-hood inherits the index: the
+same pooled structure is separable at a permissive sufficiency floor and
+inseparable at a strict one. "Real versus false" is not a property the sweep can
+return at all — only real-*at*-purpose.
+
+One sweep per purpose is available if and only if the purpose set is finite and
+enumerated at check time. It is not, by the architecture's own charter: Layer 2
+exists precisely because warrant does not transfer across uses, including uses
+not yet specified. The valuable judgements are the quantified ones — separable
+for *every* purpose, hence safe to modularize permanently; inseparable for every
+purpose, hence structural rather than a threshold artifact. Universal claims
+over an open index are not decidable by any finite family of Layer 1/2 runs.
+
+They are, however, certifiable structurally. An untangling that uses only
+form-preserving moves — no merge, no split, no residue reallocation, no warrant
+touched — is purpose-blind, and therefore certifies false-tangle-hood for all
+purposes at once, including future ones. So the advantage over the sweep is
+*expressive*, not merely a matter of cost. This is the point on which the
+prosecution's Count 4 was most confidently wrong.
+
+=== Composition-forgery, and what the diode actually buys
+
+The diode's clock must be *epistemic* — when evidence became available or was
+committed — not ontic. Otherwise retrodiction, which is most of history and all
+of forensics, fails to type-check. That concession is unavoidable and it is
+expensive.
+
+First, it means the diode disposes only of *label-honest* backward edges. Since
+forgery is precisely the crime of having correct form, and type systems verify
+structure given trusted labels, the diode buys well-formedness, not security.
+
+Second, epistemic time in a multi-source system is a *partial* order — distinct
+sources commit at causally unrelated instants. There is then no slab, no level
+planes, and no single Morse function, so Count 1's geometry is not merely false
+but ill-formed in the general case. Stipulating a single sequential verifier
+restores it, at the price that verdicts now depend on an arbitrary interleaving
+of causally incomparable commits; soundness then demands proving verdict
+invariance across admissible interleavings, which is the same question in
+another vocabulary.
+
+Third, and concretely: because the diode is applied *per claim-type*, and claim
+types carry constitutively different clocks, the web is a union of differently
+ordered charts glued along type-conversion edges — a dated document grounds a
+historical event-claim, which grounds a forensic inference, whose confirmation
+grounds a new reading of another document. A composite path can be forward in
+each chart's own order while its endpoints, compared in one order, land the
+conclusion *earlier* than where the path began. This manufactures priority with
+no single backward edge, no forged label, no fabricated anchor, and no cycle.
+Formally it is holonomy: every chart is flat — the combing argument is valid
+per-slab — and the twist lives in the gluing.
+
+Where a global conservative extension of the union of typed orders exists,
+demanding acyclicity of the glued preorder is cheap and form-only, and that
+fragment belongs in Layer 1's continuity sub-layer. Where the clocks are
+incommensurable by design — the retrodiction cases that forced epistemic time in
+the first place — blanket acyclicity would falsely reject legitimate
+retrodiction, and the check must instead *classify* composite paths as licit or
+illicit mixed-order transports.
+
+== The restated charter
+
+The sortal layer adjudicates *identity of an argument across presentations*, and
+delivers one of two things:
+
+*Equivalence certificate* — a sequence of moves, every intermediate of which
+passes Layers 1 and 2, transforming one presentation into the other. Isotopy to
+an essentially unique flat embedding; productive unrolling of a guarded loop;
+dihomotopy of two interleavings; collapse of an apparently independent line onto
+the line it duplicates.
+
+*Obstruction certificate* — an invariant separating the two under the same
+quotient. A Petersen-family minor; an unguarded self-support loop; a distinct
+dihomotopy class; a linking-style invariant of the support incidence.
+
+Three consequences worth stating explicitly.
+
+*Reduction to an equivalence proof is not a demotion.* Detection and
+equivalence-certification are dual: a false-tangle certificate *is* a move
+sequence collapsing one strand onto another, and a real-tangle certificate is an
+invariant that refuses to. "It is only an equivalence proof" is the job
+described correctly.
+
+*The certificate is the deliverable, not a stand-in.* Count 5 required the fast
+path to approximate a slow ground truth. Here the untangling witness — the
+refactoring whose every intermediate state remains green — is what the user
+wanted; there is no slower procedure it approximates.
+
+*Layer 2 already works this way.* Its verdict is not a bare Boolean: an
+insufficiency carries a witness naming the coordinate and edge responsible
+(`trope-checker/src/idris2/Checker/Check.idr:74`, `Insufficient (List String)
+(Maybe (String, String))`, at `69221ad`). Certificate-shaped output is the
+established idiom in this architecture, not a novelty introduced for Layer 3.
+
+[#arrow]
+== The reversed dependency arrow
+
+The design rationale ran Layer 1 → Layer 3: temporality sits in Layer 1 so the
+topology inherits clean orientations from a form-only rule.
+
+The missing arrow runs Layer 3 → Layer 2. Overlapping presentations from
+different sources must be recognised as the same argument *before* resource
+accounting runs, or Layer 2 double-counts — this is exactly what the doubling
+attack exploits. An affine ledger is well-defined only relative to a
+token-identity relation, and that relation cannot be read off labels, because
+labels are what forgery attacks.
+
+Layer 3 is therefore upstream of Layer 2's soundness, not decoration downstream
+of it. The dependency runs both ways through the third layer, which is what
+being load-bearing means.
+
+Stated at full strength (see <<discipline>>): the omission is not merely
+undetected, it is *undetectable in the resource algebra*. Affinity governs
+contractions that are taken; a contraction that was never taken leaves no trace
+in it, because two distinct labels really were spent once each. Whether they
+were the same token is a fact about identity, and identity is not a resource
+property. So this is not a gap Layer 2 could close by being more careful.
+
+== Relation to the canonical statement
+
+The following is quoted verbatim from `0-AI-MANIFEST.a2ml`, `(core-idea
+(statement …))`. It is marked do-not-paraphrase there, and it is reproduced
+rather than summarised here for that reason.
+
+[quote]
+____
+A claim can hold on BOTH sides of a domain transition and still NOT MEAN
+THE SAME THING on both sides. The invariant is not 'true here and true
+there' — it is 'the SAME CLAIM here and there'. That path is what must
+be invariant.
+____
+
+*The following is a new claim, and is not part of the canonical statement.* It
+is argued here rather than absorbed into the statement, per that block's own
+instruction to argue openly rather than silently improve the wording.
+
+The claim: Layer 3's restated subject matter — identity of an argument under
+structure-preserving moves — and the canonical statement's "the SAME CLAIM here
+and there" are the same question asked of different transformations. The
+canonical statement is about *domain transitions*: the same claim carried across
+a boundary between formalisms, where cross-domain equality is not expressible
+from inside either domain. Layer 3 is about *presentation moves*: the same
+argument carried across a re-derivation, re-wording, re-ordering, or refactor,
+where equality is not expressible from inside either presentation.
+
+The structural similarity is exact in the respect that matters: in both cases
+every local check passes while the load-bearing identity is already broken, and
+each side really is internally consistent, so nothing looks wrong. The doubling
+attack is the presentation-move instance of the same silent failure that "different
+faces, same cube" is the domain-transition instance of.
+
+What is *not* claimed: that these are one mechanism, or that a tool for one is a
+tool for the other. Domain transitions cross formalisms; presentation moves stay
+within one. Whether a single quotient covers both is open, and would need
+argument rather than assertion.
+
+[#naming]
+== The collision, measured
+
+An earlier draft of this record stated that the knot vocabulary lived only in
+conversation and in this ADR's own branch. *That was wrong*, and the correction
+matters more than the name.
+
+*The three-layer metaphor is committed on main, one repository over.*
+`_LANGUAGES _SET/nextgen-language-evangeliser` carries "types → carrier · tropes
+→ recurring equivalence-figures · knot theory → certificate" across seven files
+(`EXPLAINME.adoc:154-156`, `docs/theory/CORRESPONDENCE-MODEL.adoc:107-112`,
+`README.adoc:66`, `CLAUDE.md:24`, `ROADMAP.adoc:23`, and two `META.a2ml`
+entries), and already names invariant-path as "the governance front-end". It has
+its own ADR-6 disclaiming literal knot theory as "an aspirational lens, not a
+computation" — the same conclusion this record reaches by argument. The public
+estate site (`_WEBSITES _SET/hyperpolymath/README.adoc:33`) also carries the
+metaphorical sense fourteen lines from a literal one.
+
+*The literal surface is roughly three times what this record first claimed* —
+about 13,355 match lines estate-wide for knot/unknot/tangle/braid/quandle/skein/
+Reidemeister/isotopy. The largest holder is not quandledb (1,507) but
+*Tangle-the-language* (4,699), whose stated premise is "programs are braids and
+equivalence is isotopy", with a real `braid_equiv` engine and mechanised
+isotopy in `proofs/Tangle.lean`. Two further repositories own this layer's exact
+former words: `frayed-knot-toolkit` (Agda `Unknot`, `Strand`,
+`project : Knot -> Strand -> StrandPath`) and
+`fraying-model-computational-testbed`.
+
+*A correction to this record's own earlier text:* `typell/crates/typell-tangle`
+was dismissed here as an unrelated homonym. It is not — it maps Tangle's
+braid-word types. The dismissal was wrong.
+
+*Blast radius of the rename is small:* about eleven prose and metadata files
+across three repositories, and *zero code identifiers, type names, function
+names, test names, or schema surface*. invariant-path's own main branch was
+clean; the vocabulary existed only on this unmerged branch. Renaming here, before
+merge, costs two files. The remaining files in nextgen-language-evangeliser and
+on the public site are follow-up work, not a blocker.
+
+=== QuandleDB is a homonym — the open probe is closed, answered NO
+
+The earlier draft asked whether QuandleDB's "invariant/equivalence +
+semantic-identity" API could carry argument presentations. It cannot, on three
+independent grounds, and the question should not be reopened without new
+evidence.
+
+*The object is wrong and hard-coded.* QuandleDB is a fixed twenty-column SQLite
+table keyed by `knot_name` (`server/serve.jl:39-60`); the sole ingestion path is
+`KnotRecord → PD code → Skein.to_planardiagram → quandle_descriptor(::PlanarDiagram)`
+(`server/quandle_semantic.jl:489`). There is no generic-structure entry point.
+
+*The equivalence engine is a GROUP BY, and the certificate-shaped parts are
+stubs.* `find_equivalent` resolves to two SQL selects over `descriptor_hash` and
+`quandle_key` (`server/serve.jl:332-353`); `find_path` — the only stage shaped
+like an equivalence certificate — is an explicit stub deferring "full BFS path
+search" (`Evaluator.jl:664-691`), as is `match`. The e-graph engine the
+whitepaper makes central exists only as prose plus a TLA+ model: a search for
+egraph/egglog/saturat across all sources returns zero hits. All thirty-six
+shipped rows carry `descriptor_version = 'fallback-v1'`, meaning no quandle was
+ever computed.
+
+*And the mathematics does not match, which is decisive.* Quandle invariants are
+invariants of a fixed combinatorial diagram modulo isotopy. Every move this
+layer must quotient by — rule permutation, rewiring, paraphrase, unrolling,
+interleaving — CHANGES the abstract graph; unrolling adds vertices, which no
+isotopy can do. Worse, paraphrase changes labels, and topological invariants are
+blind to labels: a quandle fingerprint therefore cannot see the doubling
+attack's defining feature, and would return FALSE POSITIVES by equating
+genuinely independent derivations that happen to share a shape.
+
+One thing there is worth borrowing, and it is not the engine: KRL ships a
+four-level confidence lattice (`ConfExact`/`ConfSufficient`/`ConfNecessary`/
+`ConfHeuristic`, `server/krl/Ast.jl:68-73`) whose necessary/sufficient split
+mirrors this layer's obstruction/equivalence duality.
+
+[#substrate]
+== Existing formal work: what can and cannot be reused
+
+Surveyed 2026-08-05 across `_TYPES _SET` and `_PROVER-SOLVER _SET`, with proofs
+independently typechecked rather than taken on trust.
+
+*Layer 1 — nothing, in any repository.* There is no syntax of claims, premises,
+steps or evidence anywhere, and no ordering on evidence events of any kind. All
+three sub-layers must be built from scratch. Two names promise otherwise and do
+not deliver: `choreographic-types` is a pre-registration stub whose
+`git log --all --diff-filter=A` returns no source file in any language on any
+branch, ever; and typell's "Level 9 Temporal safety" passes iff a named field is
+present, examining no event and no order.
+
+*Layer 2 — two real, verified contributions.* `tropical-types` derives the whole
+retention order (reflexivity, transitivity, antisymmetry, monotonicity in both
+operations) from one line of idempotence with no case split on the carrier
+(`Resource/Algebra/Dioid.lean:36-99`), and makes absorption of deceptive
+elements a semiring law every instance must discharge rather than a stipulation
+(`Interface.lean:78-80`). `#print axioms` on its load-bearing theorems reports
+none, and its CI greps a 23-theorem axiom audit and exits 1 — a real gate.
+Separately, `echo-types` proves that path-independence of grade degradation
+holds *precisely* if the retention order is propositional, and supplies a
+countermodel refuting it otherwise (`EchoGraded.agda:145-171`,
+`EchoSeparating.agda:131-141`). That is a mechanised necessary condition on this
+architecture's six-coordinate `Grade`, and checking it is an audit, not a build.
+
+*This layer — a quarter, on the obstruction side only.* `echo-types` supplies a
+compiling home for the object this layer's question ranges over: `Echo f y = Σ A
+(λ x → f x ≡ y)` (`Echo.agda:16-17`), the fibre of a lossy map — "which distinct
+inputs collapsed to the same output". `echo-not-prop` (`EchoTruncation.agda:76-82`)
+is a general "here is an invariant separating two members of one fibre", and
+`FiberSize-fin` mechanises "identified members count once" — the counting half
+of the sortal, exactly. But there is *nothing* on the equivalence-certificate
+side: no move relation, no quotient, no normal form, no confluence result, in
+any repository surveyed. And the piece most needed is the repo's own unclosed
+debt — propositional truncation is postulated under `--safe`
+(`EchoImageFactorizationPropPostulated.agda:108`) and constructed only in a
+`--cubical` island that Agda's flag rules forbid the main cone from importing.
+"Merely inhabited versus how many witnesses" is precisely what the doubling
+attack turns on.
+
+=== absolute-zero's CNO: refuted as a substrate, valuable as a case study
+
+The hypothesis was attractive: an equivalence certificate is a move sequence
+non-null on the presentation but provably null on the claim, i.e. a Certified
+Null Operation on semantic content, and `CNOCategory.v` would supply the
+category. It does not survive, and the refutation is machine-checked against the
+repository's own Coq.
+
+`is_CNO` is nullity against one hard-coded projection that deliberately excludes
+the program counter (`CNO.v:63-71`), from which follows the axiom-free
+`any_jump_is_cno`: an unconditional jump to an arbitrary target is a CNO,
+because under that projection control flow does not exist. Every move this layer
+must adjudicate is a control-flow move. Worse, the exclusion is documented as
+having been made *because* requiring PC-equality made "every non-empty CNO claim
+FALSE" — the widen-the-invariant-until-your-moves-are-null circularity, executed
+in the file proposed as the substrate. And `CNOCategory.v` is a category of
+machine states whose hom-sets are *not* quotiented by any semantic equivalence,
+which is the opposite of the construction needed.
+
+What genuinely survives is a negative case study, and it is worth an afternoon
+before this layer's first definition is written: `CNO.v:646-658` records two
+axioms deleted as unsound because the quotient and the move relation disagreed —
+congruence must be proved, never assumed; and `LandauerDerivation.v:330-343`
+records an attempt to reason modulo a quotient that failed and became an axiom,
+naming the missing ingredients exactly. `CNO.v:576-589` draws the right
+conclusion from Rice's theorem — be a checker, not a searcher.
+
+[WARNING]
+.Do not take a dependency on absolute-zero's Lean development
+====
+`proofs/lean4/FilesystemCNO.lean` and `proofs/lean4/LambdaCNO.lean` each derive
+`False` from their own axioms: `mkdir_rmdir_inverse` (`:98`) is stated without
+the precondition its Coq counterpart carries, and `eta_equivalence` (`:264`) is
+refuted by absolute-zero's own `LambdaCNO.v:430`. `lake build` reports success,
+and CI never runs the Lean leg at all. Reported for that repository to fix; noted
+here so no one imports it.
+====
+
+=== A tooling ruling that follows
+
+Mechanise this layer in *Agda with `--cubical`*, not Idris 2. Its core
+construction is a quotient by admissible moves, and kategoria's
+`Level10_CubicalTypes.idr:191-199` argues correctly that Idris 2's QTT cannot
+host path types, transport, higher inductive types or quotients. This is the one
+useful thing that survey produced from kategoria.
+
+[#numbering]
+=== Never write bare "L1", "L2", "L3"
+
+Three L-numberings are live in adjacent repositories and the near-misses are
+worse than the collisions: kategoria's L1–L10 is a language-feature ladder,
+typell/VCL's L1–L10 is a database-query safety scale, and this architecture's is
+type/trope/sortal. Both neighbours put temporality at *L9* while this
+architecture puts it at *Layer 1c*; kategoria's L7 is linear/affine (this
+architecture's Layer 2 concern) and its L10 is type-identity (reads as this
+layer). A cross-claim has already been made in error on number adjacency alone
+(`routes/delta-aggregate/TYPELL-BRIDGE.adoc:33-56`). Write `Layer 1 (type)`,
+`Layer 2 (trope)`, `Layer 3 (sortal)`; prefix foreign references `kat-L7`,
+`ty-L9`.
+
+== Consequences
+
+=== Positive
+
+* The third layer has a subject matter that survives the strongest available
+  attack, rather than a job description that dissolves under it.
+* Its output type is fixed: certificates, dual in form, checkable independently
+  of the procedure that found them.
+* Two form-only fragments are correctly reassigned *to Layer 1*, where they are
+  cheap: Petersen-minor testing for intrinsic linking, and acyclicity of the
+  glued preorder wherever a global conservative extension of the per-type orders
+  exists.
+
+=== Negative
+
+* Layer ordering is no longer a clean stack. Layer 3 is upstream of Layer 2's
+  soundness and downstream of Layer 1's orientations, so implementation cannot
+  proceed strictly bottom-up.
+* Verdict-level caching across Layer 2 is unsafe without an identity quotient,
+  because token identity is an input to resource accounting rather than a
+  consequence of it.
+
+=== Neutral
+
+* The diode is retained unchanged and remains correct. Its scope is now stated
+  accurately: it disposes of label-honest backward edges, which is a real but
+  narrow class.
+* Exogenous anchor fraud remains outside every layer. It is attestation and
+  provenance infrastructure, not a checking layer, and no internal discipline
+  can catch it.
+
+[#open]
+== Open
+
+=== The Layer 2 vocabulary does not match committed code
+
+The vocabulary used in the discussion that produced this record — strength,
+consistency, coherence, resemblance-warrant-on-merge, p-residue, p-sufficiency —
+does not match what is built. In `trope-checker` at `69221ad`, Layer 2 is:
+
+* a six-coordinate grade — `verification/proofs/idris2/Trope/Grade.idr:19`,
+  `record Grade` with `fQuality`, `fBearer`, `fContext`, `fRecord : Fate`,
+  `bond : Bond`, `merge : Merge`;
+* nine `p-*` effects in
+  `trope-particularity-workbench/vocabulary/` — preserving, projecting,
+  collapsing, detaching, attenuating, falsifying, misbinding, conflating,
+  fusing;
+* a floor as partial demand vector — `src/idris2/Checker/Ir.idr:36`;
+* a verdict `Sufficient | Insufficient` with a witness edge —
+  `src/idris2/Checker/Check.idr:74`.
+
+Of the six terms, *only p-sufficiency is real*, defined as `floor(U) ⊑ acc(v)`
+(`hermeneia/docs/THEORY.adoc:57`). *`p-residue` does not exist anywhere in the
+estate* — a case-insensitive search over all repositories returns nothing.
+
+This is recorded rather than reconciled, for two reasons. First, the
+prosecution's Count 3 read p-residue as affine resource accounting, so part of
+the argument above rests on a term that could not be grounded; the
+reachability result in particular assumes affinity and should be re-derived
+against the actual grade algebra. Second,
+`trope-particularity-workbench/tests/check-vocabulary.sh` is a live consistency
+gate that hard-fails on any vocabulary entry outside the nine effects, so
+introducing these terms as if they were established would break a real check.
+
+*What would settle it:* a ruling on whether the six terms are a new Layer 2
+design superseding the grade algebra, an informal gloss of it, or drift. If new,
+they need reconciling against `Grade` and the nine effects before either
+vocabulary is cited as canonical.
+
+=== Not settled here
+
+* *Who owns the total-evidence requirement.* Affinity makes weakening free:
+  leaving evidence uncited is costless in the resource algebra, which is the
+  right call for a store but leaves cherry-picking invisible. Suppressing
+  contrary evidence is epistemically culpable and violates no rule in any of the
+  three layers — Layer 1 sees well-formed structure, Layer 2 sees a strand that
+  passes for its use, Layer 3 sees a presentation identical to itself. Detecting
+  it requires comparing the argument against evidence *not in it*, so it is not a
+  property of the committed web at all. Either a fourth obligation or an explicit
+  out-of-scope ruling; currently it is neither.
+* Whether guarded self-support — bisimulation-style arguments, precedent whose
+  authority is constituted by continued citation — is admitted. If it is,
+  closures exist and knot types proper become realizable. If it is not, the
+  checker rejects a recognised class of sound arguments, *and* loses the ability
+  to distinguish sound coinduction from self-grounding forgery, which share the
+  same Layer 1 form.
+* Whether the correctness criterion remains tractable. Multiplicative proof-net
+  correctness is linear-time without units, but proof *equivalence* with units
+  is PSPACE-complete (Heijltjes–Houston 2014). The sortal layer asks the
+  second question, not the first.
+* Whether Milnor invariants suffice as obstruction certificates. They classify
+  Brunnian links up to link-homotopy, but boundary links have all Milnor
+  invariants zero while remaining non-trivial, so they cannot be the general
+  certificate format.
