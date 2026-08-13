@@ -1,89 +1,54 @@
-# Auto-detect text files and perform LF normalization
-* text=auto
+# SPDX-License-Identifier: MPL-2.0
+# RSR-compliant .gitattributes
 
-# Denote all Python files as text
-*.py text
+* text=auto eol=lf
 
-# Denote all shell scripts as text
-*.sh text
+# Source
+*.rs    text eol=lf diff=rust
+*.ex    text eol=lf diff=elixir
+*.exs   text eol=lf diff=elixir
+*.jl    text eol=lf
+*.res   text eol=lf
+*.resi  text eol=lf
+*.ada   text eol=lf diff=ada
+*.adb   text eol=lf diff=ada
+*.ads   text eol=lf diff=ada
+*.hs    text eol=lf
+*.chpl  text eol=lf
+*.scm   text eol=lf
+*.ncl   text eol=lf
+*.nix   text eol=lf
 
-# Denote all Markdown files as text
-*.md text
+# Docs
+*.md    text eol=lf diff=markdown
+*.adoc  text eol=lf
+*.txt   text eol=lf
 
-# Denote all YAML files as text
-*.yaml text
-*.yml text
+# Data
+*.json  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.toml  text eol=lf
 
-# Denote all JSON files as text
-*.json text
+# Config
+.gitignore     text eol=lf
+.gitattributes text eol=lf
+justfile       text eol=lf
+Makefile       text eol=lf
+Containerfile  text eol=lf
 
-# Denote all TOML files as text
-*.toml text
+# Scripts
+*.sh   text eol=lf
 
-# Denote all JavaScript/TypeScript files as text
-*.js text
-*.ts text
-*.jsx text
-*.tsx text
+# Binary
+*.png   binary
+*.jpg   binary
+*.gif   binary
+*.pdf   binary
+*.woff2 binary
+*.zip   binary
+*.gz    binary
 
-# Denote all HTML files as text
-*.html text
-
-# Denote all CSS files as text
-*.css text
-
-# Denote all Rust files as text
-*.rs text
-
-# Denote all Java files as text
-*.java text
-
-# Denote all Go files as text
-*.go text
-
-# Denote all C/C++ files as text
-*.c text
-*.cpp text
-*.h text
-*.hpp text
-
-# Denote all Lua files as text
-*.lua text
-
-# Denote all Zig files as text
-*.zig text
-
-# Line endings
-*.sh eol=lf
-*.py eol=lf
-*.md eol=lf
-*.yaml eol=lf
-*.yml eol=lf
-*.json eol=lf
-*.toml eol=lf
-*.js eol=lf
-*.ts eol=lf
-Makefile eol=lf
-Dockerfile eol=lf
-
-# Language-specific attributes
-*.py diff=python
-*.js diff=javascript
-*.ts diff=typescript
-*.rs diff=rust
-*.go diff=go
-*.java diff=java
-*.zig diff=zig
-
-# Linguist-specific overrides
-*.coq linguist-language=Coq
-*.v linguist-language=V
-*.agda linguist-language=Agda
-*.idr linguist-language=Idris
-*.purs linguist-language=PureScript
-*.elm linguist-language=Elm
-*.rkt linguist-language=Racket
-*.scm linguist-language=Scheme
-*.clj linguist-language=Clojure
-*.cljs linguist-language=Clojure
-*.cljc linguist-language=Clojure
+# Lock files
+Cargo.lock  text eol=lf -diff
+flake.lock  text eol=lf -diff
