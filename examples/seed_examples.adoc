@@ -1,0 +1,14 @@
+== Seed Examples
+
+[arabic]
+. This benchmark proves the model can reason.
+. This theorem guarantees production safety.
+. This cost reduction means transition is easy.
+. This model result shows all workers are motivated by incentives.
+. This uncertainty means we should delay action.
+. Under assumptions, the local result implies all deployments are safe.
+. The pilot data implies we should change policy immediately.
+. The proof implies the corollary in the same formal system.
+. In practice, this benchmark suggests gains but does not guarantee
+real-world performance.
+. Clearly, this single test means every environment is secure.
