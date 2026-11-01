@@ -3,7 +3,7 @@
 # This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # Rust CI — thin wrapper calling the shared estate reusable in
-# hyperpolymath/standards. Configure once, propagate everywhere.
+# metadatastician/standards. Configure once, propagate everywhere.
 # See: docs/CI-REUSABLE-WORKFLOWS.adoc in standards.
 name: Rust CI
 
@@ -18,4 +18,4 @@ permissions:
 
 jobs:
   rust-ci:
-    uses: hyperpolymath/standards/.github/workflows/rust-ci-reusable.yml@571cc734cd69fb846032ec77a662aa8ee4fc32cd
+    uses: metadatastician/standards/.github/workflows/rust-ci-reusable.yml@22e060bb239875c1180f08ca9fd9cc361b9ebc41
