@@ -75,7 +75,7 @@ jobs:
             # Use the same verifier as canonical Governance; never accept a
             # failed lock check or mask it with "continue-on-error".
             gh extension install github/gh-actions-lock --pin v0.2.0
-            gh actions-lock --no-fix
+            gh actions-lock --verify
           else
             # Lockless repositories must use explicit SHA references.
             # Include "- uses:" in addition to "uses:".

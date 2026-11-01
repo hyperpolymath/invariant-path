@@ -24,7 +24,8 @@
   "witness": {
     "kind": "agda_kernel_proof",
     "source_path": "proofs/SameCube.agda",
-    "source_commit": "1a26385c774995e91986b30d9aeee8cb248e4687",
+    "source_git_blob_sha1": "cb07db52fcb206ba69e91108fd95dbba97bbcd62",
+    "source_sha256": "2fc6039eb1dad70b202550a68ccb2cdba9ddf9993083560ded7f273c489743f3",
     "theorem": "same-cube",
     "scoped_contract": "unitResultCorrespondence",
     "check_command": "agda --safe --without-K --cubical-compatible -i proofs proofs/SameCube.agda",

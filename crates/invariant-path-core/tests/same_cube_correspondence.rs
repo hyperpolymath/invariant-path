@@ -29,6 +29,15 @@ fn unit_returning_claim_is_scoped_to_the_abstract_model() {
     assert_eq!(c["witness"]["kind"], "agda_kernel_proof");
     assert_eq!(c["witness"]["theorem"], "same-cube");
     assert_eq!(c["witness"]["scoped_contract"], "unitResultCorrespondence");
+    assert!(c["witness"]["source_commit"].is_null());
+    assert_eq!(
+        c["witness"]["source_git_blob_sha1"],
+        "cb07db52fcb206ba69e91108fd95dbba97bbcd62"
+    );
+    assert_eq!(
+        c["witness"]["source_sha256"],
+        "2fc6039eb1dad70b202550a68ccb2cdba9ddf9993083560ded7f273c489743f3"
+    );
     // A source-reference guard, NOT a substitute for running Agda.
     assert!(PROOF.contains("same-cube : (a : Obs ⊤) → stmt a ≡ tail a"));
     assert!(PROOF.contains("unitResultCorrespondence = record { agrees = same-cube }"));
