@@ -1,0 +1,57 @@
+{
+  "format": "invariant-path.same-cube-correspondence",
+  "version": 1,
+  "claim_id": "affinescript.greet.statement-tail.unit",
+  "relation": "observational_equality",
+  "domain": "abstract_trace_and_result_model",
+  "source": {
+    "form": "statement",
+    "expression": "stmt a",
+    "type": "Obs unit"
+  },
+  "target": {
+    "form": "tail_expression",
+    "expression": "tail a",
+    "type": "Obs unit"
+  },
+  "scope": {
+    "return_kind": "unit",
+    "observables": [
+      "effect_trace",
+      "unit_result"
+    ]
+  },
+  "witness": {
+    "kind": "agda_kernel_proof",
+    "source_path": "proofs/SameCube.agda",
+    "source_commit": "1a26385c774995e91986b30d9aeee8cb248e4687",
+    "theorem": "same-cube",
+    "scoped_contract": "unitResultCorrespondence",
+    "check_command": "agda --safe --without-K --cubical-compatible -i proofs proofs/SameCube.agda",
+    "evidence": "typechecked_locally_agda_2.6.4.3"
+  },
+  "excluded_generalisation": {
+    "result_kind": "non_unit_result_observed",
+    "counterexample": "nonUnitResultCounterexample",
+    "interpretation": "This return-sensitive counterexample forbids unrestricted generalisation; other observation policies require separate judgements."
+  },
+  "wasm_observation": {
+    "corpus": "examples/same-cube/greet",
+    "date": "2026-06-18",
+    "wasm_byte_classes": 2,
+    "source": "examples/same-cube/README.adoc",
+    "status": "historical_not_rechecked_here"
+  },
+  "implementation_bridge": {
+    "source": "abstract_trace_and_result_model",
+    "target": "affinescript_compiled_wasm_semantics",
+    "status": "open",
+    "not_established": [
+      "compiler_correctness",
+      "all_program_equivalence",
+      "byte_identical_wasm",
+      "end_to_end_effect_handler_semantics"
+    ]
+  },
+  "verification_scope": "local_agda_kernel_check_only_not_a_ci_receipt"
+}
