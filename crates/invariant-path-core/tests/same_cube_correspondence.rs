@@ -63,7 +63,10 @@ fn abstract_proof_cannot_be_promoted_to_compiler_correctness() {
         c["implementation_bridge"]["target"],
         "affinescript_compiled_wasm_semantics"
     );
-    assert_eq!(c["wasm_observation"]["status"], "historical_not_rechecked_here");
+    assert_eq!(
+        c["wasm_observation"]["status"],
+        "historical_not_rechecked_here"
+    );
     assert_eq!(c["wasm_observation"]["wasm_byte_classes"], 2);
     assert_eq!(
         c["verification_scope"],
