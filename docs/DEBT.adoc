@@ -159,14 +159,18 @@ start. Neither has been triaged.
 *Closed when:* each either passes or has its finding recorded here as
 accepted.
 
-==== C4 — No proof gate. `+MEDIUM+`
+==== C4 — Scoped Agda CI gate added; compiler grounding still open. `+MEDIUM+`
 
-No workflow invokes Agda, and none runs `+scripts/verify-same-cube.sh+`.
-The CI half of link:#p1[P1] and link:#p2[P2]. Unaffected by the lockfile
-fix.
+PR #85 adds a hosted, non-skipping Agda proof-check job dependent on Rust CI.
+This was verified in GitHub Actions run 41360922101 (Agda 2.6.3 under
++--safe --without-K --cubical-compatible+). The branch-local proof and
+its CI receipt do *not* establish the open model-to-WASM semantics bridge.
 
-*Closed when:* a workflow compiles `+proofs/SameCube.agda+` and runs the
-verifier, and both can fail the build.
+The separate `+scripts/verify-same-cube.sh+` is still *not* a CI gate,
+and its missing-compiler SKIP remains problem <<p2,P2>>.
+
+*Closed when:* the proof gate is merged, both proof and compiler-grounding
+checks run in CI, and a missing compiler is reported as non-success.
 
 '''''
 
@@ -253,26 +257,19 @@ Separately, `+src/ui/+` (an AffineScript GUI sketch, in no build) and
 
 === Proof debt
 
-### P1 — `+SameCube.agda+` is real but ungated. `+MEDIUM+`
+### P1 — `+SameCube.agda+` checked in CI; negative gate test outstanding. `+MEDIUM+`
 
-The proof is sound work: `+--safe+`, stdlib-free, `+Trace+` as a module
-parameter, *zero postulates and zero holes*. Better than much of the
-estate.
+PR #85 typechecks the abstract unit-result theorem and a non-unit
+counterexample under the estate's Agda flags, and adds a post-Rust-CI
+hosted check. GitHub Actions run 41360922101 passed that proof job.
 
-But nothing compiles it. `+docs/tech-debt-2026-05-26.md+` marks proof
-debt `+RESOLVED+` on the grounds that the file exists. Existing is not
-being checked: if the proof broke tomorrow, no gate would notice.
+This is a real kernel check but proves only the abstract trace-and-result
+model, not AffineScript's compiler or WASM execution. A deliberately
+broken proof fixture has not yet been submitted to demonstrate that
+the hosted gate fails in the negative case.
 
-*Correction to the record:* proof debt is _half_ closed — the artefact
-exists, the verification does not.
-
-It also covers a fragment by design: observational identity holds *only
-for unit-returning actions*, since non-unit tails have different result
-types. That boundary is stated in the proof and in
-`+profiles/faces.md+`; it is recorded here so the gap is not mistaken
-for a passing grade.
-
-*Closed when:* CI compiles it and a deliberately broken variant fails.
+*Closed when:* the proof job is merged and a deliberately broken variant
+provably fails the required CI check.
 
 ### P2 — The same-cube verifier exits 0 when it cannot run. `+MEDIUM+`
 
