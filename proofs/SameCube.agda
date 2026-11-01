@@ -91,12 +91,16 @@ data ObservedResult : Set where
 
 data ⊥ : Set where
 
+-- Observe a statement by preserving its trace and marking its result dropped.
 statementObserved : Obs Two → Obs ObservedResult
 statementObserved (trace , _) = trace , droppedResult
 
+-- Observe a tail expression by preserving its trace and returned value.
 tailObserved : Obs Two → Obs ObservedResult
 tailObserved (trace , result) = trace , returnedResult result
 
+-- For every Two-valued observation, equality of these two observations is
+-- impossible: the result markers differ, even though the traces agree.
 nonUnitResultCounterexample :
   (a : Obs Two) → statementObserved a ≡ tailObserved a → ⊥
 nonUnitResultCounterexample (trace , result) ()
