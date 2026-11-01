@@ -19,9 +19,14 @@ run-cli:
 same-cube corpus="examples/same-cube/greet":
     ./scripts/verify-same-cube.sh {{corpus}} --out .machine_readable/audits/same-cube.jsonl
 
-# Machine-check the same-cube proofs (Agda, --safe)
+# Machine-check the same-cube proof under the estate's safe Agda profile
 proofs:
-    agda --safe proofs/SameCube.agda
+    agda --safe --without-K --cubical-compatible -i proofs proofs/SameCube.agda
+
+# Check the kernel proof and the scoped-claim metadata regression guards
+correspondence-check:
+    just proofs
+    cargo test -p invariant-path-core --test same_cube_correspondence
 
 # Run the TUI
 run-tui:
