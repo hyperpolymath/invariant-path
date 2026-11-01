@@ -98,3 +98,18 @@ programs.
 * Effect-handler lowering soundness (tracked in affinescript #555); a
 face that exercises `+handle+` may converge in text yet diverge at
 runtime.
+
+=== Scoped model correspondence (experimental)
+
+link:../examples/same-cube/correspondence.json[The recorded claim] has
+the precise scope: +stmt a+ and +tail a+ agree as +Trace × result+
+observations *for unit-returning actions* in the abstract model.
+The kernel-checked Agda witness is +unitResultCorrespondence+ in
++proofs/SameCube.agda+; +nonUnitResultCounterexample+ distinguishes
+the forms when the non-unit return is observed.
+
+The two WASM byte classes reported for +greet+ remain a separate,
+historical observation. The *bridge* between the abstract model and
+compiled WASM semantics is still *OPEN*. Neither an abstract proof nor
+byte comparison by itself certifies compiler correctness. This profile
+must not promote the scoped result into an all-program equivalence claim.
