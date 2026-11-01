@@ -1,5 +1,5 @@
-# This workflow is managed by gh actions-lock.
 # SPDX-License-Identifier: MPL-2.0
+# This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # Rust CI — thin wrapper calling the shared estate reusable in
@@ -19,3 +19,30 @@ permissions:
 jobs:
   rust-ci:
     uses: metadatastician/standards/.github/workflows/rust-ci-reusable.yml@22e060bb239875c1180f08ca9fd9cc361b9ebc41
+
+  # Tests must pass before the mathematical witness is re-checked.
+  proof-correspondence:
+    name: Agda correspondence (safe, scoped)
+    needs: rust-ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact PR commit
+        uses: actions/checkout@v7.0.1
+
+      # Ubuntu 24.04 'noble' carries Agda 2.6.3. The proof was also checked
+      # locally under 2.6.4.3; the CI receipt identifies its own version.
+      # No fallback to a weaker flag profile or successful SKIP is permitted.
+      - name: Install pinned distribution Agda
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends agda-bin=2.6.3-1build1
+          test "$(agda --version)" = "Agda version 2.6.3"
+
+      - name: Check bounded correspondence and counterexample
+        shell: bash
+        run: |
+          agda --safe --without-K --cubical-compatible -i proofs proofs/SameCube.agda
