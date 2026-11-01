@@ -64,24 +64,30 @@ jobs:
           fi
           echo "All workflows have permissions declared"
 
-      - name: Check SHA-Pinned Actions
+      - name: Verify action refs against the authoritative lock
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo "=== Checking Action Pinning ==="
-          # Find any uses: lines that don't have @SHA format
-          # Pattern: uses: owner/repo@<40-char-hex>
-          unpinned=$(grep -rnE "^[[:space:]]+uses:" .github/workflows/ | \
-            grep -v "@[a-f0-9]\{40\}" | \
-            grep -v "uses: \./\|uses: docker://\|uses: actions/github-script" || true)
-
-          if [ -n "$unpinned" ]; then
-            echo "ERROR: Found unpinned actions:"
-            echo "$unpinned"
-            echo ""
-            echo "Replace version tags with SHA pins, e.g.:"
-            echo "  uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6.0.1"
-            exit 1
+          set -euo pipefail
+          if [ -f .github/workflows/actions.lock ]; then
+            # Version tags are resolved immutably by the repository lockfile.
+            # Use the same verifier as canonical Governance; never accept a
+            # failed lock check or mask it with "continue-on-error".
+            gh extension install github/gh-actions-lock --pin v0.2.0
+            gh actions-lock --no-fix
+          else
+            # Lockless repositories must use explicit SHA references.
+            # Include "- uses:" in addition to "uses:".
+            unpinned=$(grep -rnE '^[[:space:]]+-?[[:space:]]*uses:' .github/workflows/ \
+              | grep -vE '@[a-fA-F0-9]{40}([[:space:]#]|$)' \
+              | grep -vE 'uses:[[:space:]]*(\./|docker://)' || true)
+            if [ -n "$unpinned" ]; then
+              echo "ERROR: actions.lock missing and actions not SHA-pinned:"
+              echo "$unpinned"
+              exit 1
+            fi
+            echo "No lockfile: all external action references are SHA-pinned."
           fi
-          echo "All actions are SHA-pinned"
 
       - name: Check for Duplicate Workflows
         run: |
