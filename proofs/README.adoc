@@ -60,7 +60,18 @@ just correspondence-check
 ----
 
 This runs the Agda kernel with the estate flags and the Rust record
-regression test. Missing tools fail rather than skip. This composite
-command is not yet a required CI gate; a local Agda check is not a
-durable CI receipt. No general AffineScript transformer correctness or
-compiled WASM observational equivalence is established here.
+regression test. Missing tools fail rather than skip.
+
+PR #85 adds a hosted +Agda correspondence (safe, scoped)+ job in
++.github/workflows/rust-ci.yml+, dependent on successful Rust CI.
+That hosted job pins Ubuntu 24.04's Agda binary package at
++agda-bin=2.6.3-1build1+ and runs the same safe flags. A successful
+hosted proof job is recorded at
+https://github.com/hyperpolymath/invariant-path/actions/runs/41360922101[GitHub Actions run 41360922101].
+The local Agda 2.6.4.3 result is separate; the version for each
+verification receipt must be stated. Whether the hosted job is
+branch-protection-required has not been established.
+
+Neither result establishes general AffineScript transformer correctness,
+a refinement bridge to compiled WASM, or compiled WASM observational
+equivalence.
