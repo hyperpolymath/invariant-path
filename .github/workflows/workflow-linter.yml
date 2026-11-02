@@ -88,6 +88,11 @@ jobs:
               while IFS= read -r line; do
                 if [[ "$line" =~ ^[[:space:]]*(-[[:space:]]*)?uses:[[:space:]]+([^[:space:]#]+) ]]; then
                   action="${BASH_REMATCH[2]}"
+                  # YAML permits quoted scalar values: normalise surrounding
+                  # matching quotes before validating the resolved reference.
+                  if [[ "$action" == \"*\" ]] || [[ "$action" == \'*\' ]]; then
+                    action="${action:1:${#action}-2}"
+                  fi
                   case "$action" in
                     ./*|docker://*) continue ;;
                   esac
