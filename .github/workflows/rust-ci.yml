@@ -46,3 +46,7 @@ jobs:
         shell: bash
         run: |
           agda --safe --without-K --cubical-compatible -i proofs proofs/SameCube.agda
+
+      - name: Check Agda witness content digests
+        shell: bash
+        run: bash scripts/check-same-cube-digests.sh
