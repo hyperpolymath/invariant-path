@@ -26,6 +26,7 @@ proofs:
 # Check the kernel proof and the scoped-claim metadata regression guards
 correspondence-check:
     just proofs
+    bash scripts/check-same-cube-digests.sh
     cargo test -p invariant-path-core --test same_cube_correspondence
 
 # Run the TUI
