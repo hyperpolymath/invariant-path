@@ -28,20 +28,17 @@ jobs:
             api.github.com:443
           disable-telemetry: true
 
-      - name: Check dispatch credential availability
-        id: dispatch-credential
+      - name: Require dispatch credential
         env:
           FARM_DISPATCH_TOKEN: ${{ secrets.FARM_DISPATCH_TOKEN }}
         shell: bash
         run: |
-          if [ -n "$FARM_DISPATCH_TOKEN" ]; then
-            echo "available=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "available=false" >> "$GITHUB_OUTPUT"
+          if [ -z "$FARM_DISPATCH_TOKEN" ]; then
+            echo "::error::FARM_DISPATCH_TOKEN is missing; propagation cannot proceed"
+            exit 1
           fi
 
       - name: Trigger Propagation
-        if: ${{ steps.dispatch-credential.outputs.available == 'true' }}
         uses: peter-evans/repository-dispatch@v4.0.1
         with:
           token: ${{ secrets.FARM_DISPATCH_TOKEN }}
@@ -56,7 +53,6 @@ jobs:
             }
 
       - name: Confirm
-        if: ${{ steps.dispatch-credential.outputs.available == 'true' }}
         env:
           REPO_NAME: ${{ github.event.repository.name }}
         run: echo "::notice::Propagation triggered for ${REPO_NAME}"
