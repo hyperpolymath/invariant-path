@@ -121,7 +121,16 @@ jobs:
                       failed = true
                       next
                     end
-                    next if ref.start_with?("./", "docker://")
+                    next if ref.start_with?("./")
+                    # Docker action tags are mutable too; always require
+                    # a content digest, including in lockless workflows.
+                    if ref.start_with?("docker://")
+                      unless ref.match?(/@sha256:[0-9a-fA-F]{64}\z/)
+                        warn "ERROR: #{path} has an unpinned Docker action: #{ref}"
+                        failed = true
+                      end
+                      next
+                    end
                     # With a lockfile, normal step actions use its frozen
                     # pins. External job-level reusable workflows do not.
                     next if locked && !ref.include?("/.github/workflows/")
