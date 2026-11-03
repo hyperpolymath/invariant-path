@@ -65,49 +65,51 @@ jobs:
           fi
           echo "All workflows have permissions declared"
 
-      - name: Verify action refs against the authoritative lock
+      - name: Verify locked actions and reusable workflow SHA pins
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          # The official lock verifier covers step-level actions but not
+          # external reusable-workflow job callers. Both must be checked.
+          locked=false
           if [ -f .github/workflows/actions.lock ]; then
-            # Version tags are resolved immutably by the repository lockfile.
-            # Use the same verifier as canonical Governance; never accept a
-            # failed lock check or mask it with "continue-on-error".
             gh extension install github/gh-actions-lock --pin v0.2.0
             gh actions-lock --verify
-          else
-            # Lockless repositories must use explicit SHA references.
-            # Include "- uses:" in addition to "uses:".
-            # Inspect both step-level and reusable-job uses. Deliberately
-            # avoid '|| true': it conflates no matches with command failure
-            # and makes the scanner's fail-closed guarantee ambiguous.
-            failed=0
-            for file in .github/workflows/*.yml .github/workflows/*.yaml; do
-              [ -f "$file" ] || continue
-              while IFS= read -r line; do
-                if [[ "$line" =~ ^[[:space:]]*(-[[:space:]]*)?uses:[[:space:]]+([^[:space:]#]+) ]]; then
-                  action="${BASH_REMATCH[2]}"
-                  # YAML permits quoted scalar values: normalise surrounding
-                  # matching quotes before validating the resolved reference.
-                  if [[ "$action" == \"*\" ]] || [[ "$action" == \'*\' ]]; then
-                    action="${action:1:${#action}-2}"
-                  fi
-                  case "$action" in
-                    ./*|docker://*) continue ;;
-                  esac
-                  if [[ ! "$action" =~ @[0-9a-fA-F]{40}$ ]]; then
-                    echo "ERROR: $file has a non-SHA external action: $action"
-                    failed=1
-                  fi
-                fi
-              done < "$file"
-            done
-            if [ "$failed" -ne 0 ]; then
-              exit 1
-            fi
-            echo "No lockfile: all external action references are SHA-pinned."
+            locked=true
           fi
+
+          failed=0
+          for file in .github/workflows/*.yml .github/workflows/*.yaml; do
+            [ -f "$file" ] || continue
+            while IFS= read -r line; do
+              if [[ "$line" =~ ^[[:space:]]*(-[[:space:]]*)?uses:[[:space:]]+([^[:space:]#]+) ]]; then
+                action="${BASH_REMATCH[2]}"
+                # YAML permits quoted scalar references.
+                if [[ "$action" == \"*\" ]] || [[ "$action" == \'*\' ]]; then
+                  action="${action:1:${#action}-2}"
+                fi
+                case "$action" in
+                  ./*|docker://*) continue ;;
+                esac
+                # With an actions.lock, the lock verifier checks step
+                # actions. Only external reusable-workflow callers need
+                # an additional literal-SHA check. Without a lockfile,
+                # ALL external actions and callers must be SHA-pinned.
+                if [ "$locked" = true ] && [[ "$action" != *"/.github/workflows/"* ]]; then
+                  continue
+                fi
+                if [[ ! "$action" =~ @[0-9a-fA-F]{40}$ ]]; then
+                  echo "ERROR: $file has an unpinned external reference: $action"
+                  failed=1
+                fi
+              fi
+            done < "$file"
+          done
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+          echo "Actions and external reusable workflows are verified."
 
       - name: Check for Duplicate Workflows
         run: |
