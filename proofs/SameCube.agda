@@ -1,4 +1,4 @@
-{-# OPTIONS --safe #-}
+{-# OPTIONS --safe --without-K --cubical-compatible #-}
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 --
@@ -66,3 +66,41 @@ same-cube (t , tt) = refl
 -- the fact that the only well-typed comparison is at A = ⊤:
 boundary : {A : Set} → Obs A → Obs ⊤
 boundary = stmt   -- the only type at which stmt and tail share a codomain is ⊤
+
+-- CORRESPONDENCE CONTRACT (abstract writer model only).
+-- The scope appears in the type: the action MUST return unit.
+-- This record is not a witness that a particular AffineScript/WASM compiler
+-- implements the model; that refinement obligation remains open.
+record UnitResultCorrespondence : Set where
+  field
+    agrees : (a : Obs ⊤) → stmt a ≡ tail a
+
+unitResultCorrespondence : UnitResultCorrespondence
+unitResultCorrespondence = record { agrees = same-cube }
+
+-- COUNTEREXAMPLE TO UNRESTRICTED GENERALISATION.
+-- When a non-unit result is observable, statement and tail lowerings differ.
+-- Compare them in a shared codomain so non-equivalence is a proposition,
+-- not merely an ill-typed attempted equality.
+data Two : Set where
+  first second : Two
+
+data ObservedResult : Set where
+  droppedResult : ObservedResult
+  returnedResult : Two → ObservedResult
+
+data ⊥ : Set where
+
+-- Observe a statement by preserving its trace and marking its result dropped.
+statementObserved : Obs Two → Obs ObservedResult
+statementObserved (trace , _) = trace , droppedResult
+
+-- Observe a tail expression by preserving its trace and returned value.
+tailObserved : Obs Two → Obs ObservedResult
+tailObserved (trace , result) = trace , returnedResult result
+
+-- For every Two-valued observation, equality of these two observations is
+-- impossible: the result markers differ, even though the traces agree.
+nonUnitResultCounterexample :
+  (a : Obs Two) → statementObserved a ≡ tailObserved a → ⊥
+nonUnitResultCounterexample (trace , result) ()

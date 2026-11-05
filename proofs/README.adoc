@@ -21,10 +21,10 @@ Check it:
 
 [source,sh]
 ----
-agda --safe proofs/SameCube.agda      # or:  just proofs
+agda --safe --without-K --cubical-compatible -i proofs proofs/SameCube.agda
 ----
 
-`+--safe+` rules out postulates and other escape hatches, so this is a
+The full estate profile (+--safe --without-K --cubical-compatible+) rules out prohibited escape hatches, so this is a
 real constructive proof, not an assertion. Agda 2.6.x; self-contained
 (no stdlib), with `+Trace+` abstracted as a module parameter.
 
@@ -36,3 +36,42 @@ semantics-preservation* (every `+lib/<face>_face.ml+` transform
 preserves the typed-wasm denotation for all programs) — remains future
 work; it needs the affinescript AST + wasm semantics formalised, not
 just this block-lowering fragment.
+
+=== Scoped claim-correspondence experiment (2026-11-01)
+
+The same module also contains +unitResultCorrespondence+, whose witness
+is restricted to statement/tail equality for *unit-returning* actions
+in the abstract +Trace × result+ model. The declaration
++nonUnitResultCounterexample+ proves that an observed non-unit return
+can distinguish the statement and tail representations. This is a
+counterexample to an unrestricted equivalence claim, not a theorem
+about all possible observational policies.
+
+The experimental, machine-readable
+link:../examples/same-cube/correspondence.json[correspondence record]
+names the claim, relation, scope, Agda witness and historical two-class
+WASM observation. Its model-to-compiler semantic bridge is explicitly
+*OPEN*. The Rust metadata guard checks that the record has not quietly
+acquired a stronger claim, but is not itself a proof checker.
+
+[source,sh]
+----
+just correspondence-check
+----
+
+This runs the Agda kernel with the estate flags and the Rust record
+regression test. Missing tools fail rather than skip.
+
+PR #85 adds a hosted +Agda correspondence (safe, scoped)+ job in
++.github/workflows/rust-ci.yml+, dependent on successful Rust CI.
+That hosted job pins Ubuntu 24.04's Agda binary package at
++agda-bin=2.6.3-1build1+ and runs the same safe flags. A successful
+hosted proof job is recorded at
+https://github.com/hyperpolymath/invariant-path/actions/runs/41360922101[GitHub Actions run 41360922101].
+The local Agda 2.6.4.3 result is separate; the version for each
+verification receipt must be stated. Whether the hosted job is
+branch-protection-required has not been established.
+
+Neither result establishes general AffineScript transformer correctness,
+a refinement bridge to compiled WASM, or compiled WASM observational
+equivalence.

@@ -1,5 +1,5 @@
-# This workflow is managed by gh actions-lock.
 # SPDX-License-Identifier: MPL-2.0
+# This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # workflow-linter.yml - Validates GitHub workflows against RSR security standards
@@ -22,6 +22,7 @@ permissions:
 jobs:
   lint-workflows:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
 
@@ -64,24 +65,89 @@ jobs:
           fi
           echo "All workflows have permissions declared"
 
-      - name: Check SHA-Pinned Actions
+      - name: Verify locked actions and reusable workflow SHA pins
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo "=== Checking Action Pinning ==="
-          # Find any uses: lines that don't have @SHA format
-          # Pattern: uses: owner/repo@<40-char-hex>
-          unpinned=$(grep -rnE "^[[:space:]]+uses:" .github/workflows/ | \
-            grep -v "@[a-f0-9]\{40\}" | \
-            grep -v "uses: \./\|uses: docker://\|uses: actions/github-script" || true)
-
-          if [ -n "$unpinned" ]; then
-            echo "ERROR: Found unpinned actions:"
-            echo "$unpinned"
-            echo ""
-            echo "Replace version tags with SHA pins, e.g.:"
-            echo "  uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6.0.1"
-            exit 1
+          set -euo pipefail
+          # The official lock verifier covers step-level actions but not
+          # external reusable-workflow job callers. Both must be checked.
+          locked=false
+          if [ -f .github/workflows/actions.lock ]; then
+            gh extension install github/gh-actions-lock --pin v0.2.0
+            gh actions-lock --verify
+            locked=true
           fi
-          echo "All actions are SHA-pinned"
+
+          # Parse workflow YAML so examples inside run: | cannot become
+          # executable uses: references. Ruby's Psych is a safe YAML loader
+          # available on the Ubuntu runner; do not deserialize objects.
+          ruby -rpsych -e '
+            locked = ARGV.fetch(0) == "true"
+            failed = false
+            Dir.glob(".github/workflows/*.{yml,yaml}").sort.each do |path|
+              begin
+                workflow = Psych.safe_load_file(path, aliases: true)
+                unless workflow.is_a?(Hash) && workflow["jobs"].is_a?(Hash)
+                  warn "ERROR: #{path} has no valid jobs mapping"
+                  failed = true
+                  next
+                end
+                workflow["jobs"].each do |job_name, job|
+                  unless job.is_a?(Hash)
+                    warn "ERROR: #{path} job #{job_name} is not a mapping"
+                    failed = true
+                    next
+                  end
+                  refs = [job["uses"]]
+                  if job.key?("steps")
+                    unless job["steps"].is_a?(Array)
+                      warn "ERROR: #{path} job #{job_name} has invalid steps"
+                      failed = true
+                      next
+                    end
+                    job["steps"].each_with_index do |step, index|
+                      unless step.is_a?(Hash)
+                        warn "ERROR: #{path} job #{job_name} step #{index} is invalid"
+                        failed = true
+                        next
+                      end
+                      refs << step["uses"]
+                    end
+                  end
+                  refs.compact.each do |ref|
+                    unless ref.is_a?(String)
+                      warn "ERROR: #{path} job #{job_name} has non-string uses"
+                      failed = true
+                      next
+                    end
+                    next if ref.start_with?("./")
+                    # Docker action tags are mutable too; always require
+                    # a content digest, including in lockless workflows.
+                    if ref.start_with?("docker://")
+                      unless ref.match?(/@sha256:[0-9a-fA-F]{64}\z/)
+                        warn "ERROR: #{path} has an unpinned Docker action: #{ref}"
+                        failed = true
+                      end
+                      next
+                    end
+                    # With a lockfile, normal step actions use its frozen
+                    # pins. External job-level reusable workflows do not.
+                    next if locked && !ref.include?("/.github/workflows/")
+                    unless ref.match?(/@[0-9a-fA-F]{40}\z/)
+                      warn "ERROR: #{path} has an unpinned external reference: #{ref}"
+                      failed = true
+                    end
+                  end
+                end
+              rescue Psych::Exception => error
+                warn "ERROR: cannot parse #{path}: #{error.message}"
+                failed = true
+              end
+            end
+            exit(failed ? 1 : 0)
+          ' "$locked"
+          echo "Actions and external reusable workflows are verified."
 
       - name: Check for Duplicate Workflows
         run: |

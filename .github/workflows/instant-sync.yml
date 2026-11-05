@@ -1,5 +1,5 @@
-# This workflow is managed by gh actions-lock.
 # SPDX-License-Identifier: MPL-2.0
+# This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # Instant Forge Sync - Triggers propagation to all forges on push/release
@@ -18,7 +18,26 @@ permissions:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
+      - name: Restrict credential-bearing dispatch egress
+        uses: step-security/harden-runner@v2.21.0
+        with:
+          egress-policy: block
+          allowed-endpoints: |
+            api.github.com:443
+          disable-telemetry: true
+
+      - name: Require dispatch credential
+        env:
+          FARM_DISPATCH_TOKEN: ${{ secrets.FARM_DISPATCH_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$FARM_DISPATCH_TOKEN" ]; then
+            echo "::error::FARM_DISPATCH_TOKEN is missing; propagation cannot proceed"
+            exit 1
+          fi
+
       - name: Trigger Propagation
         uses: peter-evans/repository-dispatch@v4.0.1
         with:
