@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Restrict credential-bearing dispatch egress
-        uses: step-security/harden-runner@v2.21.0
+        uses: step-security/harden-runner@v2.22.3
         with:
           egress-policy: block
           allowed-endpoints: |
